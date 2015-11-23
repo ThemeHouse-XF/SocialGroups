@@ -1,0 +1,2527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_SocialGroups" title="[⌂] Social Groups" version_string="1.2.1" version_id="1447094555" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="createNewSocialCategory" parent_navigation_id="nodeTree" display_order="60" link="social-categories/add" admin_permission_id="" debug_only="0" hide_no_children="0"/>
+    <navigation navigation_id="socialGroups" parent_navigation_id="applications" display_order="12" link="" admin_permission_id="node" debug_only="0" hide_no_children="1"/>
+  </admin_navigation>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="option_template_thSocialGroupsMemberDefaults"><![CDATA[<xen:controlunit label="{$preparedOption.title}" explain="{xen:raw $preparedOption.explain}">
+<ul class="unitPairsJustified">
+	<li>
+		<span class="label">{xen:phrase th_watch_forum_when_join_social_forum_socialgroups}:</span>
+		<xen:select name="{$fieldPrefix}[{$preparedOption.option_id}][default_watch_state]" value="{$value.default_watch_state}" inputclass="value autoSize">
+			<xen:option value="watch_no_email">{xen:phrase yes}</xen:option>
+			<xen:option value="watch_email">{xen:phrase yes_with_email}</xen:option>
+			<xen:option value="">{xen:phrase no}</xen:option>
+		</xen:select>
+	</li>
+</ul>
+
+<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+{xen:raw $editLink}
+</xen:controlunit>]]></template>
+    <template title="th_import_xfaddons_config_socialgroups"><![CDATA[<xen:title>{xen:phrase configure_importer}: {$name}</xen:title>
+
+<xen:form action="{xen:adminlink import/config}">
+
+	<xen:selectunit name="config[node_id]" label="{xen:phrase th_social_category_socialgroups}:">
+		<xen:options source="$nodeOptions" />
+	</xen:selectunit>
+		
+	<xen:submitunit save="{xen:phrase validate_configuration}" />
+		
+	<input type="hidden" name="config[retain_keys]" value="{$retainKeys}" />
+	<input type="hidden" name="importer" value="{$importer}" />
+</xen:form>]]></template>
+    <template title="th_option_default_sort_socialgroups"><![CDATA[<xen:controlunit label="{$preparedOption.title}" hint="{$formatParams.hint}">
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+	<xen:html>
+		<xen:select name="{$fieldPrefix}[{$preparedOption.option_id}][0]" value="{$preparedOption.option_value.0}" inputclass="autoSize">
+			<xen:option value="last_post_date">{xen:phrase last_message_time}</xen:option>
+			<xen:option value="title">{xen:phrase title_alphabetical}</xen:option>
+			<xen:option value="discussion_count">{xen:phrase th_number_of_discussions_socialgroups}</xen:option>
+			<xen:option value="member_count">{xen:phrase th_number_of_members_socialgroups}</xen:option>
+		</xen:select>
+		<xen:select name="{$fieldPrefix}[{$preparedOption.option_id}][1]" value="{$preparedOption.option_value.1}" inputclass="autoSize">
+			<xen:option value="asc">{xen:phrase ascending}</xen:option>
+			<xen:option value="desc">{xen:phrase descending}</xen:option>		
+		</xen:select>
+		<xen:include template="option_list_option_editlink" />
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:controlunit>]]></template>
+    <template title="th_option_onoff_nodeselect_socialgroups"><![CDATA[<xen:require css="th_option_onoff_nodeselect_socialgroups.css" />
+<xen:checkboxunit hint="{$preparedOption.hint}" class="onOffNodeSelect">
+	<xen:label>{$_preparedOption.title}</xen:label>
+	<xen:option selected="{$preparedOption.option_value}">
+		<xen:label>{$preparedOption.title}</xen:label>
+		<xen:radio name="{$fieldPrefix}[{$preparedOption.option_id}][_type]">
+			<xen:option value="_all" selected="!{$preparedOption.option_value._type} || {$preparedOption.option_value._type} == '_all'">{xen:phrase th_in_all_social_categories_socialgroups}</xen:option>
+			<xen:option value="_some" selected="{$preparedOption.option_value._type} == '_some'">
+				<xen:label>{xen:phrase th_in_following_social_categories_socialgroups}:</xen:label>
+				<xen:checkbox name="{$fieldPrefix}[{$preparedOption.option_id}]" value="{$preparedOption.option_value}">
+					<xen:options source="$formatParams" />
+				</xen:checkbox>
+			</xen:option>
+			<xen:comment><xen:option value="_permissions" selected="{$preparedOption.option_value._type} == '_permissions'">{xen:phrase th_from_permissions_socialgroups}</xen:option></xen:comment>
+			<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+			<xen:html>
+				<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+				{xen:raw $editLink}
+			</xen:html>
+		</xen:radio>
+		<xen:hint>{xen:raw $preparedOption.explain}</xen:hint>
+	</xen:option>
+	<xen:html>
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:checkboxunit>]]></template>
+    <template title="th_option_onoff_nodeselect_socialgroups.css"><![CDATA[.ctrlUnit.onOffNodeSelect > dd li {
+	margin: 4px 0 8px;
+	padding-left: 1px;
+}
+
+.ctrlUnit.onOffNodeSelect > dd li li li li li {
+	margin: 4px 16px 8px;
+}]]></template>
+    <template title="th_option_permissions_socialgroups"><![CDATA[<xen:require css="th_option_permissions_socialgroups.css" />
+
+<dl class="ctrlUnit">
+	<dt>{xen:phrase option_th_SocialGroups_permissions}</dt>
+	<dd>
+		<table class="socialGroupsPermissions">
+			<tr class="groupHeading">
+				<th class="groupTitle"></th>
+				<th class="option">{xen:phrase th_member_socialgroups}</th>
+				<th class="option">{xen:phrase th_moderator_socialgroups}</th>
+				<th class="option">{xen:phrase th_creator_socialgroups}</th>
+			</tr>
+			<xen:foreach loop="$preparedOption.permissions" key="$permission_id" value="$permission_name">
+				<tr class="source">
+					<th class="groupTitle">{$permission_name}:</th>
+					<xen:foreach loop="$preparedOption.count" value="$count">
+						<td><label class=""><input type="checkbox" name="options[th_SocialGroups_permissions][{$count}][{$permission_id}]" value="1"{xen:if '{$preparedOption.option_value.{$count}.{$permission_id}}', ' checked="checked"', ''}></label></td>
+					</xen:foreach>
+				</tr>
+			</xen:foreach>
+		</table>
+		{xen:raw $editLink}
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		<p class="explain">{xen:phrase option_th_SocialGroups_permissions_explain}</p>
+	</dd>
+</dl>]]></template>
+    <template title="th_option_permissions_socialgroups.css"><![CDATA[table.socialGroupsPermissions {
+	margin-bottom: 10px;
+}
+
+table.socialGroupsPermissions th.groupTitle {
+	width: 180px;
+}
+
+table.socialGroupsPermissions .groupHeading th {
+	padding-bottom: 6px;
+}
+
+table.socialGroupsPermissions th.option {
+	font-size: 10px;
+	text-align: center;
+	width: 80px;
+}
+
+table.socialGroupsPermissions th.source {
+	padding-left: 2px;
+}
+
+table.socialGroupsPermissions td {
+	vertical-align: middle;
+}
+
+table.socialGroupsPermissions label {
+	background: #AAA url('styles/default/xenforo/gradients/category-23px-light.png') repeat-x top;
+	display: block;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+	padding: 0;
+}
+
+table.socialGroupsPermissions label.disabled {
+	background-color: #CCC;
+}
+
+table.socialGroupsPermissions label.selected {
+	background-color: #4B4;
+}
+
+table.socialGroupsPermissions .source th {
+	text-align: right;
+	font-size: 12px;
+	padding-right: 15px;
+}]]></template>
+    <template title="th_option_show_in_libraries_thread_thumbs"><![CDATA[<xen:if is="{$formatParams}">
+	<xen:radiounit label="{$preparedOption.title}" name="{$fieldPrefix}[{$preparedOption.option_id}][_type]" hint="{$preparedOption.hint}">
+		<xen:option value="_some" selected="{$preparedOption.option_value._type} == '_some'">
+			<xen:label>{xen:phrase th_show_thumbs_in_following_libraries_thread_thumbs}:</xen:label>
+			<xen:checkbox name="{$fieldPrefix}[{$preparedOption.option_id}]" value="{$preparedOption.option_value}">
+				<xen:options source="$formatParams" />
+			</xen:checkbox>
+		</xen:option>
+		<xen:option value="_all" selected="{$preparedOption.option_value._type} == '_all'">{xen:phrase th_show_thumbs_in_all_libraries_thread_thumbs}</xen:option>
+		<xen:option value="_permissions" selected="{$preparedOption.option_value._type} == '_permissions'">{xen:phrase th_show_libraries_from_permissions_thread_thumbs}</xen:option>
+		<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+		<xen:html>
+			<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+			{xen:raw $editLink}
+		</xen:html>
+	</xen:radiounit>
+</xen:if>]]></template>
+    <template title="th_option_url_portion_socialgroups"><![CDATA[<xen:checkboxunit label="" hint="{$preparedOption.hint}" class="{$extra.class}">
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+	<xen:option label="{$preparedOption.title}" value="1" selected="{$preparedOption.option_value.allow}" name="{$fieldPrefix}[{$preparedOption.option_id}][allow]">
+		<xen:disabled>
+			<label><input type="checkbox" name="{$fieldPrefix}[{$preparedOption.option_id}][required]" value="1" {xen:checked {$preparedOption.option_value.required}} />
+				{xen:phrase th_require_url_portions_for_all_social_forums_socialgroups}</label></li>
+		</xen:disabled>
+		<xen:disabled>
+			<label><input type="checkbox" name="{$fieldPrefix}[{$preparedOption.option_id}][editable]" value="1" {xen:checked {$preparedOption.option_value.editable}} />
+				{xen:phrase th_allow_url_portions_to_be_edited_socialgroups}</label></li>
+		</xen:disabled>
+	</xen:option>
+	<xen:html>
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:checkboxunit>]]></template>
+    <template title="th_social_category_edit_socialgroups"><![CDATA[<xen:title>{xen:if {$forum.node_id}, '{xen:phrase th_edit_social_category_socialgroups}: {$forum.title}', {xen:phrase th_create_new_social_category_socialgroups}}</xen:title>
+
+<xen:if is="{$forum.node_id}">
+	<xen:navigation>
+		<xen:breadcrumb href="{xen:adminlink nodes}#{xen:helper listitemid, $forum.node_id}">{$forum.title}</xen:breadcrumb>
+	</xen:navigation>
+
+	<xen:topctrl>
+		<a href="{xen:adminlink 'nodes/add', '', 'parent_node_id={$forum.node_id}'}" class="button">+ {xen:phrase add_child}</a>
+		<a href="{xen:adminlink 'nodes/add', '', 'parent_node_id={$forum.parent_node_id}'}" class="button">+ {xen:phrase add_sibling}</a>
+	</xen:topctrl>
+</xen:if>
+
+<xen:form action="{xen:adminlink 'social-categories/save', $forum}"
+	class="AutoValidator"
+	data-fieldValidatorUrl="{xen:adminlink 'social-categories/validate-field', $forum}"
+	data-redirect="on">
+
+	<ul class="tabs Tabs" data-panes="#forumPanes > li">
+		<xen:hook name="admin_forum_edit_tabs">
+		<li class="active"><a>{xen:phrase basic_information}</a></li>
+		<!-- slot: after_basic_information -->
+		<li><a>{xen:phrase th_social_category_options_socialgroups}</a></li>
+		<!-- slot: after_forum_options -->
+		<li><a>{xen:phrase thread_prefixes}</a></li>
+		</xen:hook>
+	</ul>
+
+	<ul id="forumPanes">
+		<xen:hook name="admin_forum_edit_panes">
+		<li>
+			<xen:hook name="forum_edit_basic_information">
+			
+			<xen:textboxunit name="title" value="{$forum.title}" label="{xen:phrase title}:" data-liveTitleTemplate="{xen:if {$forum.node_id},
+				'{xen:phrase th_edit_social_category_socialgroups}: <em>%s</em>',
+				'{xen:phrase th_create_new_social_category_socialgroups}: <em>%s</em>'}">
+			</xen:textboxunit>
+			
+			<!-- slot: after_title -->
+			
+			<xen:textboxunit name="node_name" value="{$forum.node_name}" label="{xen:phrase url_portion}:" hint="{xen:phrase optional}">
+				<xen:explain>{xen:phrase th_if_entered_url_to_social_category_not_contain_id_socialgroups}</xen:explain>
+			</xen:textboxunit>
+			
+			<!-- slot: after_node_name -->
+	
+			<xen:textboxunit name="description" value="{$forum.description}" label="{xen:phrase description}:" hint="{xen:phrase you_may_use_html}" explain="{xen:phrase node_description_explain}" rows="2" inputclass="Elastic" />
+			
+			<!-- slot: after_description -->
+			
+			<fieldset>
+				<!-- slot: before_parent_node_id -->
+			
+				<xen:selectunit name="parent_node_id" value="{$forum.parent_node_id}" label="{xen:phrase parent_node}:">
+					<xen:options source="$nodeParentOptions" />
+				</xen:selectunit>
+				
+				<!-- slot: after_parent_node_id -->
+				
+				<xen:textboxunit name="display_order" value="{$forum.display_order}" label="{xen:phrase display_order}:">
+					<xen:explain>{xen:phrase position_of_this_item_relative_to_other_nodes_with_same_parent}</xen:explain>
+				</xen:textboxunit>
+				
+				<!-- slot: after_display_order -->
+				
+				<xen:checkboxunit label="">
+					<xen:option name="display_in_list" label="{xen:phrase display_in_node_list}" selected="{$forum.display_in_list}">
+						<xen:hint>{xen:phrase if_unselected_users_will_not_see_this_node_in_list}</xen:hint>
+					</xen:option>
+				</xen:checkboxunit>
+				
+				<!-- slot: after_display_in_list -->
+			</fieldset>
+			
+			<!-- slot: before_style_override -->
+			
+			<xen:checkboxunit label="{xen:phrase style}:">
+				<xen:option name="style_override" label="{xen:phrase override_user_style_choice}" selected="{$forum.style_id}">
+					<xen:select name="style_id" value="{$forum.style_id}">
+						<xen:options source="$styleOptions" />
+					</xen:select>
+					<xen:hint>{xen:phrase if_specified_all_visitors_view_using_selected_style}</xen:hint>
+				</xen:option>
+			</xen:checkboxunit>
+			
+			</xen:hook>
+		</li>
+		<!-- slot: after_basic_information -->
+		<li>
+			<xen:hook name="admin_forum_edit_forum_options">
+			
+			<xen:checkboxunit label="">
+				<xen:option name="allow_posting" label="{xen:phrase th_allow_new_messages_to_be_posted_in_socialgroups}" selected="{$forum.allow_posting}">
+					<xen:hint>{xen:phrase th_if_disabled_users_not_able_post_messages_in_socialgroups}</xen:hint>
+				</xen:option>
+			</xen:checkboxunit>
+				
+			<xen:if is="{$xenOptions.currentVersionId} >= 1040000">
+				<xen:checkboxunit label="">
+					<xen:option name="allow_poll" label="{xen:phrase th_allow_polls_to_be_created_in_socialgroups}" selected="{$forum.allow_poll}">
+						<xen:hint>{xen:phrase th_if_disabled_users_not_given_option_to_create_poll_with_thread_socialgroups}</xen:hint>
+					</xen:option>
+
+					<xen:option name="moderate_threads" label="{xen:phrase th_moderate_new_threads_posted_in_socialgroups}" selected="{$forum.moderate_threads}">
+						<xen:hint>{xen:phrase th_if_enabled_moderator_manually_approve_threads_posted_in_socialgroups}</xen:hint>
+					</xen:option>
+	
+					<xen:option name="moderate_replies" label="{xen:phrase th_moderate_replies_posted_in_socialgroups}" selected="{$forum.moderate_replies}">
+						<xen:hint>{xen:phrase th_if_enabled_moderator_manually_approve_replies_posted_in_socialgroups}</xen:hint>
+					</xen:option>
+				</xen:checkboxunit>
+			<xen:else />
+				<xen:checkboxunit label="">
+					<xen:option name="moderate_messages" label="{xen:phrase th_moderate_all_messages_posted_in_socialgroups}" selected="{$forum.moderate_messages}">
+						<xen:hint>{xen:phrase th_if_enabled_moderator_manually_approve_messages_post_socialgroups}</xen:hint>
+					</xen:option>
+				</xen:checkboxunit>
+			</xen:if>
+				
+			<xen:checkboxunit label="">
+				<xen:option name="count_messages" label="{xen:phrase th_count_messages_in_social_groups_toward_user_total_socialgroups}" selected="{$forum.count_messages}">
+					<xen:hint>{xen:phrase th_if_disabled_messages_posted_will_not_contribute_to_socialgroups}</xen:hint>
+				</xen:option>
+				
+				<xen:option name="find_new" label="{xen:phrase th_include_social_groups_in_find_new_threads_socialgroups}" selected="{$forum.find_new}">
+					<xen:hint>{xen:phrase th_if_disabled_messages_will_never_appear_in_find_new_socialgroups}</xen:hint>
+				</xen:option>
+			</xen:checkboxunit>
+			
+			<xen:if is="{$xenOptions.currentVersionId} >= 1020000">
+				<xen:radiounit label="{xen:phrase forum_watch_notification_limit}:" name="allowed_watch_notifications" value="{$forum.allowed_watch_notifications}">
+					<xen:option value="all">{xen:phrase new_messages}</xen:option>
+					<xen:option value="thread">{xen:phrase new_threads}</xen:option>
+					<xen:option value="none">{xen:phrase none}</xen:option>
+					<xen:explain>{xen:phrase forum_watch_notification_limit_desc}</xen:explain>
+				</xen:radiounit>
+	
+				<xen:controlunit label="{xen:phrase default_sort_order}:">
+					<xen:select name="default_sort_order" value="{$forum.default_sort_order}" inputclass="autoSize">
+						<xen:option value="last_post_date">{xen:phrase last_message}</xen:option>
+						<xen:option value="post_date">{xen:phrase start_date}</xen:option>
+						<xen:option value="title">{xen:phrase title}</xen:option>
+						<xen:option value="reply_count">{xen:phrase replies}</xen:option>
+						<xen:option value="views">{xen:phrase views}</xen:option>
+					</xen:select>
+					<xen:select name="default_sort_direction" value="{$forum.default_sort_direction}" inputclass="autoSize">
+						<xen:option value="desc">{xen:phrase descending}</xen:option>
+						<xen:option value="asc">{xen:phrase ascending}</xen:option>
+					</xen:select>
+				</xen:controlunit>
+			</xen:if>
+			
+			<xen:if is="{$xenOptions.currentVersionId} >= 1040000">
+				<xen:selectunit label="{xen:phrase thread_list_date_limit}:" name="list_date_limit_days" value="{$forum.list_date_limit_days}">
+					<xen:option value="0">{xen:phrase none}</xen:option>
+					<xen:option value="7">{xen:phrase x_days, 'days=7'}</xen:option>
+					<xen:option value="14">{xen:phrase x_days, 'days=14'}</xen:option>
+					<xen:option value="30">{xen:phrase x_days, 'days=30'}</xen:option>
+					<xen:option value="60">{xen:phrase x_months, 'months=2'}</xen:option>
+					<xen:option value="90">{xen:phrase x_months, 'months=3'}</xen:option>
+					<xen:option value="182">{xen:phrase x_months, 'months=6'}</xen:option>
+					<xen:option value="365">{xen:phrase 1_year}</xen:option>
+					<xen:explain>{xen:phrase thead_list_date_limit_used_on_busy_forums_to_improve_performance}</xen:explain>
+				</xen:selectunit>
+			</xen:if>
+			
+			</xen:hook>
+		</li>
+		<!-- slot: after_forum_options -->
+		<li>
+			<xen:hook name="admin_forum_edit_thread_prefixes">
+			
+			<xen:if is="{$prefixOptions}">
+				<xen:require js="js/xenforo/acp_forum_editor.js" />
+				
+				<xen:controlunit label="{xen:phrase available_prefixes}:" class="multiple checkboxColumns AvailablePrefixes">
+					<xen:hint><br /><label><input type="checkbox" class="CheckAll" data-target="dl.AvailablePrefixes" /> {xen:phrase select_all}</label></xen:hint>
+					<xen:html>
+						<xen:foreach loop="$prefixOptions" key="$prefixGroupId" value="$prefixes">
+							<xen:checkbox>
+								<xen:foreach loop="$prefixes" key="$prefixId" value="$prefix">
+									<xen:option name="available_prefixes[]" value="{$prefixId}" selected="in_array({$prefixId}, {$nodePrefixes})">{$prefix.label}</xen:option>
+								</xen:foreach>
+							</xen:checkbox>
+						</xen:foreach>
+					</xen:html>
+				</xen:controlunit>
+				
+				<!-- slot: after_available_prefixes -->
+			
+				<fieldset>
+					<xen:selectunit name="default_prefix_id" value="{$forum.default_prefix_id}"
+						label="{xen:phrase default_thread_prefix}"
+						inputclass="PrefixManager" data-checkboxes="dl.AvailablePrefixes input:checkbox">
+						<xen:option label="({xen:phrase none})" value="0" />
+						<xen:options source="$prefixOptions" />
+						<xen:explain>{xen:phrase default_thread_prefix_explain}</xen:explain>
+					</xen:selectunit>
+				</fieldset>
+				
+				<!-- slot: after_default_prefix_id -->
+				
+			<xen:else />
+				<xen:controlunit label="{xen:phrase available_prefixes}">({xen:phrase none}) <a href="{xen:adminlink thread-prefixes/add}" target="_blank">{xen:phrase create_new_thread_prefix}</a></xen:controlunit>
+				<input type="hidden" name="default_thread_prefix" value="0" />
+				
+				<!-- slot: after_available_prefixes_none -->
+			</xen:if>
+			
+			</xen:hook>
+		</li>
+		</xen:hook>
+	</ul>
+
+	<xen:submitunit save="{xen:phrase th_save_social_category_socialgroups}">
+		<xen:if is="{$forum.node_id}"><a href="{xen:adminlink forums/delete-confirm, $forum}" class="button">{xen:phrase th_delete_social_category_socialgroups}...</a></xen:if>
+	</xen:submitunit>
+
+	<input type="hidden" name="node_type_id" value="SocialCategory" />
+
+</xen:form>]]></template>
+    <template title="th_tools_rebuild_socialgroups"><![CDATA[<xen:form action="{xen:adminlink 'tools/cache-rebuild'}">
+	<h2 class="subHeading">{xen:phrase th_rebuild_social_forum_information_socialgroups}</h2>
+	<xen:spinboxunit name="options[batch]" value="250" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
+	
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="SocialGroups" />
+</xen:form>]]></template>
+  </admin_templates>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenResource_ControllerPublic_Resource" description="XenResource_ControllerPublic_Resource (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerAdmin_Node" description="XenForo_ControllerAdmin_Node (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Forum" description="XenForo_ControllerPublic_Forum (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Member" description="XenForo_ControllerPublic_Member (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Post" description="XenForo_ControllerPublic_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Thread" description="XenForo_ControllerPublic_Thread (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenForo_DataWriter_Discussion_Thread" description="XenForo_DataWriter_Discussion_Thread (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenResource_DataWriter_Resource" description="XenResource_DataWriter_Resource (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDataWriter" active="0" hint="XenResource_DataWriter_Update" description="XenResource_DataWriter_Update (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="EWRporta_Model_Blocks" description="EWRporta_Model_Blocks (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="ThemeHouse_NoForo_Model_NoForo" description="ThemeHouse_NoForo_Model_NoForo (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_InlineMod_Post" description="XenForo_Model_InlineMod_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_InlineMod_Thread" description="XenForo_Model_InlineMod_Thread (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Forum" description="XenForo_Model_Forum (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Permission" description="XenForo_Model_Permission (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Post" description="XenForo_Model_Post (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Session" description="XenForo_Model_Session (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Thread" description="XenForo_Model_Thread (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_User" description="XenForo_Model_User (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenResource_Model_Resource" description="XenResource_Model_Resource (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassRoutePrefix" active="0" hint="XenForo_Route_Prefix_Forums" description="XenForo_Route_Prefix_Forums (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassView" active="0" hint="XenForo_ViewPublic_Forum_View" description="XenForo_ViewPublic_Forum_View (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_ForumWatch" description="XenForo_Model_ForumWatch (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerPublic_Watched" description="XenForo_ControllerPublic_Watched (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassInstallerThemeHouse" active="0" hint="ThemeHouse_ForumWatchMore_Install_Controller" description="ThemeHouse_ForumWatchMore_Install_Controller (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerAdmin_Tools" description="XenForo_ControllerAdmin_Tools (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDeferred" active="0" hint="XenForo_Deferred_User" description="XenForo_Deferred_User (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_ThreadWatch" description="XenForo_Model_ThreadWatch (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Alert" description="XenForo_Model_Alert (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassHelper" active="0" hint="XenForo_ControllerHelper_ForumThreadPost" description="XenForo_ControllerHelper_ForumThreadPost (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassDataWriter" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_helper" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassHelper" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_route_prefix" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassRoutePrefix" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_LoadClass" callback_method="loadClassView" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="template_create" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_TemplateCreate" callback_method="templateCreate" active="1" hint="" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_TemplateHook" callback_method="templateHook" active="1" hint="" description=""/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="ThemeHouse_SocialGroups_Listener_TemplatePostRender" callback_method="templatePostRender" active="1" hint="" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates>
+    <template title="th_new_thread_messagetext_socialgroups">
+      <subject><![CDATA[{xen:phrase th_new_thread_x_in_social_forum_y_socialgroups, "title={$thread.titleCensored}", "social_forum_title={$socialForum.title}"}]]></subject>
+      <body_text><![CDATA[{xen:phrase watched_thread_reply_messagetext_email_text, 
+	"receiver_username={$receiver.username}",
+	"username={$reply.username}",
+	"title={xen:helper threadPrefix, $thread, plain}{$thread.title}",
+	"message={$reply.messageText}",
+	"view_link={xen:link 'canonical:threads/post-permalink', $thread, 'post={$reply}'}",
+	"board_link={xen:link 'canonical:index'}",
+	"board_title={$xenOptions.boardTitle}",
+	"social_forum_title={$socialForum.title}"
+}]]></body_text>
+      <body_html><![CDATA[<p style="margin-top: 0">{xen:phrase th_new_thread_email_html_socialgroups,
+	'receiver={$receiver.username}',
+	'poster=<a href="{xen:link canonical:members, $post}" style="color: #176093; text-decoration: none">{$post.username}</a>',
+	'board=<a href="{xen:link canonical:index}" style="color: #176093; text-decoration: none">{$xenOptions.boardTitle}</a>',
+	'social_forum_title=<a href="{xen:link canonical:social-forums, $socialForum}" style="color: #176093; text-decoration: none">{$socialForum.title}</a>'}</p>
+
+<h2 style="font-size: 18pt; font-weight: normal; margin: 10px 0"><a href="{xen:link canonical:threads/post-permalink, $thread, 'post={$post}'}" style="color: #141414; text-decoration: none">{xen:helper threadPrefix, $thread, plain}{$thread.title}<br />
+	<span style="color: #176093; font-size: 10px">{xen:link canonical:threads/post-permalink, $thread, 'post={$post}'}</span></a></h2>
+
+<hr style="height: 1px; margin: 10px 0; border: 0; color: #D7EDFC; background-color: #D7EDFC" />
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 10px 0 20px">
+<tr valign="top">
+	<td style="font-size: 13px; line-height: 1.231; padding-right: 20px">
+		<div style="
+			background-color: #D7EDFC;
+			border: 1px solid #D7EDFC;
+			border-radius: 5px">
+			<table cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td style="
+					background-color: #F0F7FC;
+					padding: 5px;
+					border-radius: 4px">
+					<a href="{xen:link canonical:members, $post}" title="{$post.username}"
+						><img src="{xen:helper avatar, $post, s}" alt="{$post.username}" title="{$reply.username}" style="
+							width: 48px;
+							height: 48px;
+							background-color: #FCFCFF;
+							border: 1px solid #A5CAE4;
+							padding: 2px;
+							border-radius: 4px"
+						/></a>
+					</td>
+				</tr>
+			</table>
+			<span style="
+				padding: 3px 5px;
+				display: block"><!--{$post.username}-->&nbsp;</span>
+		</div>
+	</td>
+	<td width="90%" style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.4">
+		{xen:raw $post.messageHtml}
+	</td>	
+</tr>
+</table>
+
+<table cellpadding="10" cellspacing="0" border="0" width="100%" style="margin: 20px 0; background-color: #f0f7fc; border-top: 1px solid #d7edfc">
+<tr>
+	<td>
+		<a href="{xen:link canonical:threads/unread, $thread}" style="
+			display: block;
+			float: left;
+			padding: 5px 10px;
+			background-color: #65a5d1;
+			border: none;
+			border-radius: 3px;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: white;
+			text-decoration: none">{xen:phrase view_this_thread}</a>
+	</td>
+	<td align="right">
+		<a href="{xen:link canonical:watched/threads}" style="
+			display: block;
+			padding: 5px 0;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: #176093;
+			text-decoration: none">{xen:phrase unread_watched_threads}</a>
+	</td>
+</tr>
+</table>
+
+<p style="font-size: 11px; color: #969696">{xen:phrase th_new_thread_email_html_footer_1_socialgroups,
+	'social_forum=<a href="{xen:link canonical:social-forums, $socialForum}" style="color: #969696">{$socialForum.title}</a>',
+	'board=<a href="{xen:link canonical:index}" style="color: #969696">{$xenOptions.boardTitle}</a>'}</p>]]></body_html>
+    </template>
+    <template title="th_new_thread_socialgroups">
+      <subject><![CDATA[{xen:phrase th_new_thread_x_in_social_forum_y_socialgroups, "title={$thread.titleCensored}", "social_forum_title={$socialForum.title}"}]]></subject>
+      <body_text><![CDATA[{xen:phrase th_new_thread_email_text_socialgroups,
+	"receiver_username={$receiver.username}",
+	"username={$post.username}",
+	"title={xen:helper threadPrefix, $thread, plain}{$thread.titleCensored}",
+	"view_link={xen:link 'canonical:threads/post-permalink', $thread, 'post={$post}'}",
+	"message={$post.messageText}",
+	"board_link={xen:link 'canonical:index'}",
+	"board_title={$xenOptions.boardTitle}",
+	"social_forum_title={$socialForum.title}"
+}]]></body_text>
+      <body_html><![CDATA[<p style="margin-top: 0">{xen:phrase th_new_thread_email_html_socialgroups,
+	'receiver={$receiver.username}',
+	'poster=<a href="{xen:link canonical:members, $post}" style="color: #176093; text-decoration: none">{$post.username}</a>',
+	'board=<a href="{xen:link canonical:index}" style="color: #176093; text-decoration: none">{$xenOptions.boardTitle}</a>',
+	'social_forum_title=<a href="{xen:link canonical:social-forums, $socialForum}" style="color: #176093; text-decoration: none">{$socialForum.title}</a>'}</p>
+
+<h2 style="font-size: 18pt; font-weight: normal; margin: 10px 0"><a href="{xen:link canonical:threads/post-permalink, $thread, 'post={$post}'}" style="color: #141414; text-decoration: none">{xen:helper threadPrefix, $thread, plain}{$thread.title}<br />
+	<span style="color: #176093; font-size: 10px">{xen:link canonical:threads/post-permalink, $thread, 'post={$post}'}</span></a></h2>
+
+<table cellpadding="10" cellspacing="0" border="0" width="100%" style="margin: 20px 0; background-color: #f0f7fc; border-top: 1px solid #d7edfc">
+<tr>
+	<td>
+		<a href="{xen:link canonical:threads/unread, $thread}" style="
+			display: block;
+			float: left;
+			padding: 5px 10px;
+			background-color: #65a5d1;
+			border: none;
+			border-radius: 3px;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: white;
+			text-decoration: none">{xen:phrase view_this_thread}</a>
+	</td>
+	<td align="right">
+		<a href="{xen:link canonical:watched/threads}" style="
+			display: block;
+			padding: 5px 0;
+			font-family: 'Trebuchet MS', Helvetica, Arial, sans-serif;
+			font-size: 11px;
+			color: #176093;
+			text-decoration: none">{xen:phrase unread_watched_threads}</a>
+	</td>
+</tr>
+</table>
+
+<p style="font-size: 11px; color: #969696">{xen:phrase th_new_thread_email_html_footer_1_socialgroups,
+	'social_forum=<a href="{xen:link canonical:social-forums, $socialForum}" style="color: #969696">{$socialForum.title}</a>',
+	'board=<a href="{xen:link canonical:index}" style="color: #969696">{$xenOptions.boardTitle}</a>'}</p>]]></body_html>
+    </template>
+  </email_templates>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="th_SocialGroups" display_order="2000" debug_only="0"/>
+    <option option_id="th_SocialGroups_allowClosed" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1500"/>
+    </option>
+    <option option_id="th_SocialGroups_allowPrimary" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1110"/>
+    </option>
+    <option option_id="th_SocialGroups_allowSecondary" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1210"/>
+    </option>
+    <option option_id="th_SocialGroups_allowStyleOverride" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1510"/>
+    </option>
+    <option option_id="th_SocialGroups_alwaysAlert" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="550"/>
+    </option>
+    <option option_id="th_SocialGroups_createToSecondary" edit_format="callback" data_type="array" can_backup="1">
+      <default_value/>
+      <edit_format_params>ThemeHouse_SocialGroups_Option_OnOffNodeSelect::renderOption</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="th_SocialGroups" display_order="1280"/>
+    </option>
+    <option option_id="th_SocialGroups_defaultSortOrder" edit_format="template" data_type="array" can_backup="1">
+      <default_value>a:2:{i:0;s:5:"title";i:1;s:3:"asc";}</default_value>
+      <edit_format_params>th_option_default_sort_socialgroups</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="th_SocialGroups" display_order="200"/>
+    </option>
+    <option option_id="th_SocialGroups_extendedPostBit" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1310"/>
+    </option>
+    <option option_id="th_SocialGroups_moderateSocialForums" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1410"/>
+    </option>
+    <option option_id="th_SocialGroups_notifyOptions" edit_format="template" data_type="array" can_backup="1">
+      <default_value>*</default_value>
+      <edit_format_params>option_template_thSocialGroupsMemberDefaults</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="ForumWatch" display_order="2000"/>
+    </option>
+    <option option_id="th_SocialGroups_permissions" edit_format="callback" data_type="array" can_backup="1">
+      <default_value>a:3:{i:3;a:35:{s:15:"moveSocialForum";s:1:"1";s:15:"editSocialForum";s:1:"1";s:17:"deleteSocialForum";s:1:"1";s:23:"addSocialForumModerator";s:1:"1";s:24:"killSocialForumModerator";s:1:"1";s:22:"approveSocialForumJoin";s:1:"1";s:21:"rejectSocialForumJoin";s:1:"1";s:21:"killSocialForumMember";s:1:"1";s:15:"viewSocialForum";s:1:"1";s:16:"leaveSocialForum";s:1:"1";s:22:"viewSocialForumMembers";s:1:"1";s:10:"viewOthers";s:1:"1";s:11:"viewContent";s:1:"1";s:4:"like";s:1:"1";s:10:"postThread";s:1:"1";s:9:"postReply";s:1:"1";s:15:"deleteOwnThread";s:1:"1";s:13:"deleteOwnPost";s:1:"1";s:11:"editOwnPost";s:1:"1";s:14:"viewAttachment";s:1:"1";s:16:"uploadAttachment";s:1:"1";s:8:"votePoll";s:1:"1";s:15:"manageAnyThread";s:1:"1";s:18:"stickUnstickThread";s:1:"1";s:11:"viewDeleted";s:1:"1";s:13:"viewModerated";s:1:"1";s:8:"undelete";s:1:"1";s:15:"deleteAnyThread";s:1:"1";s:16:"lockUnlockThread";s:1:"1";s:19:"hardDeleteAnyThread";s:1:"1";s:17:"hardDeleteAnyPost";s:1:"1";s:11:"editAnyPost";s:1:"1";s:13:"deleteAnyPost";s:1:"1";s:16:"approveUnapprove";s:1:"1";s:4:"warn";s:1:"1";}i:2;a:28:{s:22:"approveSocialForumJoin";s:1:"1";s:21:"rejectSocialForumJoin";s:1:"1";s:21:"killSocialForumMember";s:1:"1";s:15:"viewSocialForum";s:1:"1";s:16:"leaveSocialForum";s:1:"1";s:22:"viewSocialForumMembers";s:1:"1";s:10:"viewOthers";s:1:"1";s:11:"viewContent";s:1:"1";s:4:"like";s:1:"1";s:10:"postThread";s:1:"1";s:9:"postReply";s:1:"1";s:15:"deleteOwnThread";s:1:"1";s:13:"deleteOwnPost";s:1:"1";s:11:"editOwnPost";s:1:"1";s:14:"viewAttachment";s:1:"1";s:16:"uploadAttachment";s:1:"1";s:8:"votePoll";s:1:"1";s:15:"manageAnyThread";s:1:"1";s:18:"stickUnstickThread";s:1:"1";s:11:"viewDeleted";s:1:"1";s:13:"viewModerated";s:1:"1";s:8:"undelete";s:1:"1";s:15:"deleteAnyThread";s:1:"1";s:16:"lockUnlockThread";s:1:"1";s:11:"editAnyPost";s:1:"1";s:13:"deleteAnyPost";s:1:"1";s:16:"approveUnapprove";s:1:"1";s:4:"warn";s:1:"1";}i:1;a:14:{s:15:"viewSocialForum";s:1:"1";s:16:"leaveSocialForum";s:1:"1";s:22:"viewSocialForumMembers";s:1:"1";s:10:"viewOthers";s:1:"1";s:11:"viewContent";s:1:"1";s:4:"like";s:1:"1";s:10:"postThread";s:1:"1";s:9:"postReply";s:1:"1";s:15:"deleteOwnThread";s:1:"1";s:13:"deleteOwnPost";s:1:"1";s:11:"editOwnPost";s:1:"1";s:14:"viewAttachment";s:1:"1";s:16:"uploadAttachment";s:1:"1";s:8:"votePoll";s:1:"1";}}</default_value>
+      <edit_format_params>ThemeHouse_SocialGroups_Option_Permissions::renderOption</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="th_SocialGroups" display_order="2000"/>
+    </option>
+    <option option_id="th_SocialGroups_primaryPostBit" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1120"/>
+    </option>
+    <option option_id="th_SocialGroups_primarySignature" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value/>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1130"/>
+    </option>
+    <option option_id="th_SocialGroups_secondaryPostBit" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1220"/>
+    </option>
+    <option option_id="th_SocialGroups_secondarySignature" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value/>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="1230"/>
+    </option>
+    <option option_id="th_SocialGroups_showChildNodesInCategory" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="40"/>
+    </option>
+    <option option_id="th_SocialGroups_showChildNodesInSocialForums" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="30"/>
+    </option>
+    <option option_id="th_SocialGroups_showSidebar" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="10"/>
+    </option>
+    <option option_id="th_SocialGroups_showWatchedGroups" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="500"/>
+    </option>
+    <option option_id="th_SocialGroups_urlPortions" edit_format="template" data_type="array" can_backup="1">
+      <default_value/>
+      <edit_format_params>th_option_url_portion_socialgroups</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="th_SocialGroups" display_order="1520"/>
+    </option>
+    <option option_id="th_SocialGroups_useCreatorAvatar" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="20"/>
+    </option>
+    <option option_id="th_SocialGroups_watchForumOnJoin" edit_format="select" data_type="string" can_backup="1">
+      <default_value>no</default_value>
+      <edit_format_params>watch_no_email={xen:phrase yes}
+watch_email={xen:phrase yes_with_email}
+no={xen:phrase no}</edit_format_params>
+      <sub_options/>
+      <relation group_id="th_SocialGroups" display_order="510"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions>
+      <permission permission_group_id="forum" permission_id="addSocialForumModerator" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="300"/>
+      <permission permission_group_id="forum" permission_id="approveSocialForumJoin" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="400"/>
+      <permission permission_group_id="forum" permission_id="assignSocialForumCreator" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="320"/>
+      <permission permission_group_id="forum" permission_id="createSocialForum" permission_type="integer" default_value_int="0" interface_group_id="thSocialGroup" display_order="400"/>
+      <permission permission_group_id="forum" permission_id="deleteSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="150"/>
+      <permission permission_group_id="forum" permission_id="editSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="100"/>
+      <permission permission_group_id="forum" permission_id="joinSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroup" display_order="100"/>
+      <permission permission_group_id="forum" permission_id="killSocialForumMember" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="420"/>
+      <permission permission_group_id="forum" permission_id="killSocialForumModerator" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="310"/>
+      <permission permission_group_id="forum" permission_id="leaveSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroup" display_order="200"/>
+      <permission permission_group_id="forum" permission_id="maxSocialForumAvatarSize" permission_type="integer" default_value_int="0" interface_group_id="thSocialGroupsModerator" display_order="200"/>
+      <permission permission_group_id="forum" permission_id="maxSocialForums" permission_type="integer" depend_permission_id="joinSocialForum" default_value_int="0" interface_group_id="thSocialGroup" display_order="101"/>
+      <permission permission_group_id="forum" permission_id="moveSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="50"/>
+      <permission permission_group_id="forum" permission_id="rejectSocialForumJoin" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="410"/>
+      <permission permission_group_id="forum" permission_id="stickUnstickSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroupsModerator" display_order="30"/>
+      <permission permission_group_id="forum" permission_id="viewSocialForum" permission_type="flag" default_value="unset" interface_group_id="thSocialGroup" display_order="1"/>
+      <permission permission_group_id="forum" permission_id="viewSocialForumMembers" permission_type="flag" default_value="unset" interface_group_id="thSocialGroup" display_order="300"/>
+      <permission permission_group_id="general" permission_id="maxSecondarySocialForums" permission_type="integer" default_value_int="0" interface_group_id="thSocialGroup" display_order="400"/>
+    </permissions>
+    <interface_groups>
+      <interface_group interface_group_id="thSocialGroup" display_order="1000"/>
+      <interface_group interface_group_id="thSocialGroupsModerator" display_order="1001"/>
+    </interface_groups>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_createNewSocialCategory" version_id="0" version_string="1.0.0"><![CDATA[Create New Social Category]]></phrase>
+    <phrase title="admin_navigation_socialGroups" version_id="1369257081" version_string="1.0.2"><![CDATA[Social Groups]]></phrase>
+    <phrase title="create_new_social_forum" version_id="0" version_string="1.0.0"><![CDATA[Create New Social Forum]]></phrase>
+    <phrase title="node_type_SocialCategory" version_id="0" version_string="1.0.0"><![CDATA[Social Category]]></phrase>
+    <phrase title="option_group_th_SocialGroups" version_id="1370005328" version_string="1.0.3"><![CDATA[[⌂] Social Groups]]></phrase>
+    <phrase title="option_group_th_SocialGroups_description" version_id="0" version_string="1.0.0"><![CDATA[Options for the [⌂] Social Groups add-on.]]></phrase>
+    <phrase title="option_th_SocialGroups_allowClosed" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow closed social forums]]></phrase>
+    <phrase title="option_th_SocialGroups_allowClosed_explain" version_id="1393262126" version_string="1.0.16"><![CDATA[Disabling this option will stop social forum creators from being able to close their group and stop any members with the appropriate permissions from joining it.]]></phrase>
+    <phrase title="option_th_SocialGroups_allowPrimary" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow primary social forum selection]]></phrase>
+    <phrase title="option_th_SocialGroups_allowPrimary_explain" version_id="1393605237" version_string="1.1.0"><![CDATA[This adds an option to a user's personal details settings to set their primary/favorite social forum. A user must already be a member of a social forum to set it as their primary social forum.]]></phrase>
+    <phrase title="option_th_SocialGroups_allowSecondary" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow secondary social forum selections]]></phrase>
+    <phrase title="option_th_SocialGroups_allowSecondary_explain" version_id="1393605237" version_string="1.1.0"><![CDATA[This adds an option to a user's personal details settings to select their secondary social forums. The maximum number of secondary social forums can be set in permissions. A user must already be a member of a social forum to add it to their list of secondary social forums.]]></phrase>
+    <phrase title="option_th_SocialGroups_allowStyleOverride" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow social forums to override user style choice]]></phrase>
+    <phrase title="option_th_SocialGroups_allowStyleOverride_explain" version_id="1393262126" version_string="1.0.16"><![CDATA[Disabling this option will stop social forum creators from being able to override the user's style for their social forum.]]></phrase>
+    <phrase title="option_th_SocialGroups_alwaysAlert" version_id="1402384758" version_string="1.1.2"><![CDATA[Always alert users]]></phrase>
+    <phrase title="option_th_SocialGroups_alwaysAlert_explain" version_id="1403855446" version_string="1.1.3"><![CDATA[Enabling this option will override a user's privacy settings and always send alerts to users who are watching a thread in a social forum.]]></phrase>
+    <phrase title="option_th_SocialGroups_createToSecondary" version_id="1392220097" version_string="1.0.14"><![CDATA[Automatically add created social forums to user's secondary list...]]></phrase>
+    <phrase title="option_th_SocialGroups_createToSecondary_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[Enabling this option automatically adds any social forums created by a user to their list of secondary social forums, provided they haven't already selected the maximum number of social forums.]]></phrase>
+    <phrase title="option_th_SocialGroups_defaultSortOrder" version_id="1411978286" version_string="1.1.5"><![CDATA[Default Sort Order for Social Categories]]></phrase>
+    <phrase title="option_th_SocialGroups_defaultSortOrder_explain" version_id="1411978286" version_string="1.1.5"><![CDATA[This is the default sort order for social forums in a social category.]]></phrase>
+    <phrase title="option_th_SocialGroups_extendedPostBit" version_id="1393605237" version_string="1.1.0"><![CDATA[Enable extended social forum post bit]]></phrase>
+    <phrase title="option_th_SocialGroups_extendedPostBit_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This includes each social forum avatar on a new line in the user's post bit, with the name of the social forum on the right. This option requires the option to display primary and/or secondary social forums in post bit to be selected.]]></phrase>
+    <phrase title="option_th_SocialGroups_moderateSocialForums" version_id="1393605237" version_string="1.1.0"><![CDATA[Moderate all social forums]]></phrase>
+    <phrase title="option_th_SocialGroups_moderateSocialForums_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This will add social forums to the moderation queue unless a user has the 'Edit Social Forum' and 'Delete Social Forum' permission.]]></phrase>
+    <phrase title="option_th_SocialGroups_notifyOptions" version_id="1348052439" version_string="1.0.1"><![CDATA[Social Groups Options:]]></phrase>
+    <phrase title="option_th_SocialGroups_notifyOptions_explain" version_id="1348052439" version_string="1.0.1"><![CDATA[In order to allow users to join social groups in one click, preferences are not shown. This option allows you to set the default values for newly registered users.]]></phrase>
+    <phrase title="option_th_SocialGroups_permissions" version_id="1344096269" version_string="1.0.0"><![CDATA[Default permission set for all users of Social Groups]]></phrase>
+    <phrase title="option_th_SocialGroups_permissions_explain" version_id="0" version_string="1.0.0"><![CDATA[Select the default additional permissions given to users who join individual Social Groups. These are on top of the permissions granted to all users in a particular Social Category, which can be customised on a per-node basis.]]></phrase>
+    <phrase title="option_th_SocialGroups_primaryPostBit" version_id="1393605237" version_string="1.1.0"><![CDATA[Show primary social forum in post bit]]></phrase>
+    <phrase title="option_th_SocialGroups_primaryPostBit_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This shows a user's primary social forum (if selected) in their post bit.]]></phrase>
+    <phrase title="option_th_SocialGroups_primarySignature" version_id="1393605237" version_string="1.1.0"><![CDATA[Show primary social forum in signature]]></phrase>
+    <phrase title="option_th_SocialGroups_primarySignature_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This shows a user's primary social forum (if selected) in their signature.]]></phrase>
+    <phrase title="option_th_SocialGroups_secondaryPostBit" version_id="1393605237" version_string="1.1.0"><![CDATA[Show secondary social forum in post bit]]></phrase>
+    <phrase title="option_th_SocialGroups_secondaryPostBit_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This shows a user's secondary social forums (if selected) in their post bit.]]></phrase>
+    <phrase title="option_th_SocialGroups_secondarySignature" version_id="1393605237" version_string="1.1.0"><![CDATA[Show secondary social forum in signature]]></phrase>
+    <phrase title="option_th_SocialGroups_secondarySignature_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[This shows a user's secondary social forums (if selected) in their signature.]]></phrase>
+    <phrase title="option_th_SocialGroups_showChildNodesInCategory" version_id="1393605237" version_string="1.1.0"><![CDATA[Show child nodes in social category]]></phrase>
+    <phrase title="option_th_SocialGroups_showChildNodesInCategory_explain" version_id="1361754083" version_string="1.0.2"><![CDATA[If enabled, any child nodes of the social category will be shown above the list of social forums.]]></phrase>
+    <phrase title="option_th_SocialGroups_showChildNodesInSocialForums" version_id="1393605237" version_string="1.1.0"><![CDATA[Show child nodes in social forums]]></phrase>
+    <phrase title="option_th_SocialGroups_showChildNodesInSocialForums_explain" version_id="1361754083" version_string="1.0.2"><![CDATA[If enabled, any child nodes of the parent social category will be shown in every social forum.]]></phrase>
+    <phrase title="option_th_SocialGroups_showSidebar" version_id="1393605237" version_string="1.1.0"><![CDATA[Show sidebar in social forum]]></phrase>
+    <phrase title="option_th_SocialGroups_showSidebar_explain" version_id="1343082302" version_string="1.0.0"><![CDATA[If checked, all social forums will display a sidebar on the right hand side.<br/>
+Enabling this may break some add-ons that edit the forum_view template.]]></phrase>
+    <phrase title="option_th_SocialGroups_showWatchedGroups" version_id="1393605237" version_string="1.1.0"><![CDATA[Show 'Watched Social Forums' link in navigation bar]]></phrase>
+    <phrase title="option_th_SocialGroups_showWatchedGroups_explain" version_id="1385769155" version_string="1.0.11"><![CDATA[Unchecking this option will remove the 'Watched Social Forums' link from the navigation bar in XenForo 1.2+. Watching Social Forums is not available in XenForo 1.1 and below.]]></phrase>
+    <phrase title="option_th_SocialGroups_urlPortions" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow URL portions for social forums]]></phrase>
+    <phrase title="option_th_SocialGroups_urlPortions_explain" version_id="1393262126" version_string="1.0.16"><![CDATA[If enabled and entered, the URL to the social forum will not contain an ID. Once a URL portion is entered, changing this value will cause URLs to be broken.]]></phrase>
+    <phrase title="option_th_SocialGroups_useCreatorAvatar" version_id="1393605237" version_string="1.1.0"><![CDATA[Use creator's avatar as default social forum avatar]]></phrase>
+    <phrase title="option_th_SocialGroups_useCreatorAvatar_explain" version_id="1343082302" version_string="1.0.0"><![CDATA[If checked, the social forum creator's avatar will be used by default as the avatar for the social forum.]]></phrase>
+    <phrase title="option_th_SocialGroups_watchForumOnJoin" version_id="1376651164" version_string="1.0.8"><![CDATA[Watch Social Forum on join]]></phrase>
+    <phrase title="option_th_SocialGroups_watchForumOnJoin_explain" version_id="1376651164" version_string="1.0.8"><![CDATA[Watching Social Forums is not available in XenForo 1.1 and below.]]></phrase>
+    <phrase title="permission_forum_addSocialForumModerator" version_id="0" version_string="1.0.0"><![CDATA[Add moderator to social forum]]></phrase>
+    <phrase title="permission_forum_approveSocialForumJoin" version_id="0" version_string="1.0.0"><![CDATA[Approve request to join social forum]]></phrase>
+    <phrase title="permission_forum_assignSocialForumCreator" version_id="1380235934" version_string="1.0.11"><![CDATA[Assign social forum creator]]></phrase>
+    <phrase title="permission_forum_createSocialForum" version_id="1344698431" version_string="1.0.1"><![CDATA[Create social forums]]></phrase>
+    <phrase title="permission_forum_deleteSocialForum" version_id="1340546430" version_string="1.0.0"><![CDATA[Delete social forum]]></phrase>
+    <phrase title="permission_forum_editSocialForum" version_id="0" version_string="1.0.0"><![CDATA[Edit social forum]]></phrase>
+    <phrase title="permission_forum_joinSocialForum" version_id="1393262126" version_string="1.0.16"><![CDATA[Join social forum]]></phrase>
+    <phrase title="permission_forum_killSocialForumMember" version_id="0" version_string="1.0.0"><![CDATA[Revoke social forum membership]]></phrase>
+    <phrase title="permission_forum_killSocialForumModerator" version_id="0" version_string="1.0.0"><![CDATA[Remove moderator from social forum]]></phrase>
+    <phrase title="permission_forum_leaveSocialForum" version_id="0" version_string="1.0.0"><![CDATA[Leave social forum]]></phrase>
+    <phrase title="permission_forum_maxSocialForumAvatarSize" version_id="0" version_string="1.0.0"><![CDATA[Maximum large avatar file size (bytes)]]></phrase>
+    <phrase title="permission_forum_maxSocialForums" version_id="1393262126" version_string="1.0.16"><![CDATA[Maximum social forums can join]]></phrase>
+    <phrase title="permission_forum_moveSocialForum" version_id="1351340737" version_string="1.0.1"><![CDATA[Move social forum]]></phrase>
+    <phrase title="permission_forum_rejectSocialForumJoin" version_id="0" version_string="1.0.0"><![CDATA[Reject request to join social forum]]></phrase>
+    <phrase title="permission_forum_stickUnstickSocialForum" version_id="1370006866" version_string="1.0.3"><![CDATA[Stick / unstick social forum]]></phrase>
+    <phrase title="permission_forum_viewSocialForum" version_id="1374199526" version_string="1.0.6"><![CDATA[View social forum]]></phrase>
+    <phrase title="permission_forum_viewSocialForumMembers" version_id="1344344658" version_string="1.0.0"><![CDATA[View social forum members]]></phrase>
+    <phrase title="permission_general_maxSecondarySocialForums" version_id="1380235934" version_string="1.0.11"><![CDATA[Maximum secondary social forums]]></phrase>
+    <phrase title="permission_interface_thSocialGroup" version_id="0" version_string="1.0.0"><![CDATA[Social Groups Permissions]]></phrase>
+    <phrase title="permission_interface_thSocialGroupsModerator" version_id="0" version_string="1.0.0"><![CDATA[Social Groups Moderator Permissions]]></phrase>
+    <phrase title="th_accept_invite_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[Accept Invite]]></phrase>
+    <phrase title="th_add_moderator_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Add Moderator]]></phrase>
+    <phrase title="th_allow_new_messages_to_be_posted_in_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Allow new messages to be posted in social groups]]></phrase>
+    <phrase title="th_allow_polls_to_be_created_in_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[Allow polls to be created in social groups]]></phrase>
+    <phrase title="th_allow_social_groups_to_override_user_style_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[Allow social groups to override user style choice]]></phrase>
+    <phrase title="th_allow_url_portions_to_be_edited_socialgroups" version_id="1393605237" version_string="1.1.0"><![CDATA[Allow URL portions to be edited once set]]></phrase>
+    <phrase title="th_all_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[All]]></phrase>
+    <phrase title="th_already_member_of_social_group_socialgroups" version_id="1394621069" version_string="1.1.0"><![CDATA[The selected user is already a member of this social group.]]></phrase>
+    <phrase title="th_approve_join_request_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Approve Join Request]]></phrase>
+    <phrase title="th_awaiting_approval_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Awaiting approval.]]></phrase>
+    <phrase title="th_awaiting_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[Awaiting]]></phrase>
+    <phrase title="th_count_messages_in_social_groups_toward_user_total_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Count messages posted in social groups toward user total]]></phrase>
+    <phrase title="th_create_new_social_category_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Create New Social Category]]></phrase>
+    <phrase title="th_create_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Create Social Forum]]></phrase>
+    <phrase title="th_creator_socialgroups" version_id="1344193543" version_string="1.0.0"><![CDATA[Creator]]></phrase>
+    <phrase title="th_delete_social_category_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Delete Social Category]]></phrase>
+    <phrase title="th_delete_social_forum_socialgroups" version_id="1340546430" version_string="1.0.0"><![CDATA[Delete Social Forum]]></phrase>
+    <phrase title="th_destination_social_category_socialgroups" version_id="1353363710" version_string="1.0.1"><![CDATA[Destination Social Category]]></phrase>
+    <phrase title="th_edit_social_category_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Edit Social Category]]></phrase>
+    <phrase title="th_edit_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Edit Social Forum]]></phrase>
+    <phrase title="th_guest_socialgroups" version_id="1364590476" version_string="1.0.2"><![CDATA[Guest]]></phrase>
+    <phrase title="th_if_disabled_messages_posted_will_not_contribute_to_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[If disabled, messages posted (directly) in social groups in this social category will not contribute towards the posting user's total messages count.]]></phrase>
+    <phrase title="th_if_disabled_messages_will_never_appear_in_find_new_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[If disabled, threads from social groups in this social category will never appear in the list of new / unread threads when users run /find-new/threads.]]></phrase>
+    <phrase title="th_if_disabled_users_not_able_post_messages_in_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[If disabled, users will not be able to post new messages or edit or delete their own messages. Moderators will still be able to manage the contents of social groups.]]></phrase>
+    <phrase title="th_if_disabled_users_not_given_option_to_create_poll_with_thread_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[If disabled, users will not be given the option to create a poll when posting a thread or to add one later. If a thread with a poll is moved into a social group, it will keep the poll.]]></phrase>
+    <phrase title="th_if_enabled_moderator_manually_approve_messages_post_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[If enabled, a moderator will have to manually approve any messages posted in social groups in this social category.]]></phrase>
+    <phrase title="th_if_enabled_moderator_manually_approve_replies_posted_in_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[If enabled, a moderator will have to manually approve replies posted to threads in social groups.]]></phrase>
+    <phrase title="th_if_enabled_moderator_manually_approve_threads_posted_in_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[If enabled, a moderator will have to manually approve threads posted in social groups.]]></phrase>
+    <phrase title="th_if_entered_url_to_social_category_not_contain_id_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[If entered, the URL to this social category will not contain an ID. Use a-z, 0-9, _, and - characters only. Note that once specified, changing this value will cause URLs to be broken.]]></phrase>
+    <phrase title="th_import_creators_socialgroups" version_id="1344186339" version_string="1.0.0"><![CDATA[Import Creators]]></phrase>
+    <phrase title="th_import_join_requests_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Import Join Requests]]></phrase>
+    <phrase title="th_import_members_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Import Members]]></phrase>
+    <phrase title="th_import_posts_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Import Posts]]></phrase>
+    <phrase title="th_import_secondary_groups_socialgroups" version_id="1351336431" version_string="1.0.1"><![CDATA[Import Secondary Groups]]></phrase>
+    <phrase title="th_import_social_forums_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Import Social Forums]]></phrase>
+    <phrase title="th_import_threads_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Import Threads]]></phrase>
+    <phrase title="th_include_social_groups_in_find_new_threads_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Include threads from social groups when users click "What's New?"]]></phrase>
+    <phrase title="th_invited_socialgroups" version_id="1344627006" version_string="1.0.0"><![CDATA[Invited]]></phrase>
+    <phrase title="th_invite_accepted_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[Invite Accepted]]></phrase>
+    <phrase title="th_invite_conversation_message_socialgroups" version_id="1410855143" version_string="1.1.4"><![CDATA[Hi {to},
+
+You have been invited to join the following group:
+[url="{url}"]{title}[/url]
+
+Please click on the link above to accept the invite.
+
+{from}]]></phrase>
+    <phrase title="th_invite_member_socialgroups" version_id="1344556884" version_string="1.0.0"><![CDATA[Invite Member]]></phrase>
+    <phrase title="th_in_all_social_categories_socialgroups" version_id="1392220097" version_string="1.0.14"><![CDATA[in all social categories]]></phrase>
+    <phrase title="th_in_following_social_categories_socialgroups" version_id="1392220097" version_string="1.0.14"><![CDATA[in the following social categories]]></phrase>
+    <phrase title="th_join_requests_approved_by_moderator_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[All requests to join must be approved by a Social Forum moderator]]></phrase>
+    <phrase title="th_join_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Join Social Forum]]></phrase>
+    <phrase title="th_leave_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Leave Social Forum]]></phrase>
+    <phrase title="th_membership_of_social_forum_x_revoked_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[Your membership of the social forum {title} has been revoked.]]></phrase>
+    <phrase title="th_members_awaiting_approval_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Awaiting Approval]]></phrase>
+    <phrase title="th_member_socialgroups" version_id="1343754081" version_string="1.0.0"><![CDATA[Member]]></phrase>
+    <phrase title="th_moderate_all_messages_posted_in_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Moderate all messages posted in social groups]]></phrase>
+    <phrase title="th_moderate_new_threads_posted_in_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[Moderate new threads posted in social groups]]></phrase>
+    <phrase title="th_moderate_replies_posted_in_socialgroups" version_id="1413970219" version_string="1.1.6"><![CDATA[Moderate replies posted in social groups]]></phrase>
+    <phrase title="th_moderate_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Moderate]]></phrase>
+    <phrase title="th_moderator_socialgroups" version_id="1343754081" version_string="1.0.0"><![CDATA[Moderator]]></phrase>
+    <phrase title="th_move_social_forum_socialgroups" version_id="1351340737" version_string="1.0.1"><![CDATA[Move Social Forum]]></phrase>
+    <phrase title="th_new_thread_email_html_footer_1_socialgroups" version_id="1342048398" version_string="1.0.0"><![CDATA[This message was sent to you because you joined the social forum {social_forum} at {board} and opted in to email notification of new threads.]]></phrase>
+    <phrase title="th_new_thread_email_html_socialgroups" version_id="1342048398" version_string="1.0.0"><![CDATA[{receiver}, {poster} created a thread in the social forum {social_forum_title} at {board}.]]></phrase>
+    <phrase title="th_new_thread_email_text_socialgroups" version_id="1342048398" version_string="1.0.0"><![CDATA[{receiver_username},
+
+{username} created a new thread in the social forum {social_forum_title} at {board_title}.
+
+	"{title}"
+
+----------------------------------------------------------------------
+
+To view this thread, click here:
+{view_link}
+
+You will not receive any further emails about this thread until you have read the new messages.
+
+----------------------------------------------------------------------
+
+This message was sent to you because you joined the social forum "{social_forum_title}" at {board_title} and opted in to email notification of new threads.
+
+{board_link}]]></phrase>
+    <phrase title="th_new_thread_messagetext_email_text_socialgroups" version_id="1342048398" version_string="1.0.0"><![CDATA[{receiver_username},
+
+{username} created a new thread in the social forum {social_forum_title} at {board_title}.
+
+	"{title}"
+
+This is the message they posted:
+----------------------------------------------------------------------
+{message}
+----------------------------------------------------------------------
+
+To view this thread, click here:
+{view_link}
+
+You will not receive any further emails about this thread until you have read the new messages.
+
+----------------------------------------------------------------------
+
+This message was sent to you because you joined the social forum "{social_forum_title}" at {board_title} and opted in to email notification of new threads.
+
+{board_link}]]></phrase>
+    <phrase title="th_new_thread_x_in_social_forum_y_socialgroups" version_id="1342048398" version_string="1.0.0"><![CDATA[{title} - New thread in {social_forum_title}]]></phrase>
+    <phrase title="th_not_member_of_any_social_forums_socialgroups" version_id="1362255625" version_string="1.0.2"><![CDATA[This user is not a member of any social forums.]]></phrase>
+    <phrase title="th_no_social_forum_members_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[There are no social forum members to display.]]></phrase>
+    <phrase title="th_number_of_discussions_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[Number of discussions]]></phrase>
+    <phrase title="th_number_of_members_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[Number of members]]></phrase>
+    <phrase title="th_open_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Open]]></phrase>
+    <phrase title="th_order_social_forums_in_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[Order social forums in]]></phrase>
+    <phrase title="th_people_may_request_to_join_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[People may request to join this Social Forum]]></phrase>
+    <phrase title="th_please_enter_a_url_portion_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[Please enter a URL portion.]]></phrase>
+    <phrase title="th_please_enter_url_portion_using_alphanumeric_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[Please enter a URL portion using a-z, 0-9, _, and - characters only.]]></phrase>
+    <phrase title="th_primary_social_forum_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Primary Social Forum]]></phrase>
+    <phrase title="th_promoted_to_moderator_of_social_forum_x_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[You have been promoted to a moderator of the social forum {title}.]]></phrase>
+    <phrase title="th_rebuild_social_forum_information_socialgroups" version_id="1344678180" version_string="1.0.0"><![CDATA[Rebuild Social Forum Information]]></phrase>
+    <phrase title="th_recent_social_forums_socialgroups" version_id="1344453507" version_string="1.0.0"><![CDATA[Recent Social Forums]]></phrase>
+    <phrase title="th_reject_join_request_socialgroups" version_id="1344708730" version_string="1.0.1"><![CDATA[Reject Join Request]]></phrase>
+    <phrase title="th_removed_as_moderator_of_social_forum_x_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[You have been removed as moderator of the social forum {title}.]]></phrase>
+    <phrase title="th_remove_moderator_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Remove Moderator]]></phrase>
+    <phrase title="th_requested_social_category_not_found_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[The requested social category could not be found.]]></phrase>
+    <phrase title="th_requested_social_forum_not_found_socialgroups" version_id="1370097182" version_string="1.0.5"><![CDATA[The requested social forum could not be found.]]></phrase>
+    <phrase title="th_request_to_join_social_forum_x_approved_socialgroups" version_id="1344633650" version_string="1.0.0"><![CDATA[Your request to join the social forum {title} has been approved.]]></phrase>
+    <phrase title="th_request_to_join_social_forum_x_rejected_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[Your request to join the social forum {title} has been rejected.]]></phrase>
+    <phrase title="th_require_url_portions_for_all_social_forums_socialgroups" version_id="1393605237" version_string="1.1.0"><![CDATA[Require URL portions for all social forums]]></phrase>
+    <phrase title="th_revoke_membership_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Revoke Membership]]></phrase>
+    <phrase title="th_save_social_category_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Save Social Category]]></phrase>
+    <phrase title="th_secondary_social_forums_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Secondary Social Forums]]></phrase>
+    <phrase title="th_set_social_forum_status_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Set Social Forum Status]]></phrase>
+    <phrase title="th_social_category_options_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Category Options]]></phrase>
+    <phrase title="th_social_category_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Category]]></phrase>
+    <phrase title="th_social_forums_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Forums]]></phrase>
+    <phrase title="th_social_forum_creator_is_not_able_to_leave_group_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[The social forum creator is not able to leave the group.]]></phrase>
+    <phrase title="th_social_forum_display_options_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[Social Forum Display Options]]></phrase>
+    <phrase title="th_social_forum_is_closed_socialgroups" version_id="1374199526" version_string="1.0.6"><![CDATA[This social forum is currently closed and can not be joined.]]></phrase>
+    <phrase title="th_social_forum_members_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Forum Members]]></phrase>
+    <phrase title="th_social_forum_member_since_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Forum member since]]></phrase>
+    <phrase title="th_social_forum_moderators_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Forum Moderators]]></phrase>
+    <phrase title="th_social_forum_not_empty_socialgroups" version_id="1340546430" version_string="1.0.0"><![CDATA[The social forum is not empty.]]></phrase>
+    <phrase title="th_social_forum_not_found_socialgroups" version_id="1393605237" version_string="1.1.0"><![CDATA[The social forum could not be found.]]></phrase>
+    <phrase title="th_social_forum_socialgroups" version_id="1369523180" version_string="1.0.2"><![CDATA[Social Forum]]></phrase>
+    <phrase title="th_social_forum_status_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[Social Forum Status]]></phrase>
+    <phrase title="th_social_forum_title_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Social Forum Title]]></phrase>
+    <phrase title="th_social_forum_tools_socialgroups" version_id="1344344658" version_string="1.0.0"><![CDATA[Social Forum Tools]]></phrase>
+    <phrase title="th_sort_social_forums_by_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[Sort social forums by]]></phrase>
+    <phrase title="th_sticky_social_forums_appear_at_top_of_first_page_socialgroups" version_id="1370006866" version_string="1.0.3"><![CDATA[Sticky social forums appear at the top of the first page of the list of social forums in their parent social category]]></phrase>
+    <phrase title="th_sure_you_want_to_delete_socialgroups" version_id="1340546430" version_string="1.0.0"><![CDATA[Are you sure you want to delete {socialForum}?]]></phrase>
+    <phrase title="th_there_are_no_social_forums_socialgroups" version_id="1340546430" version_string="1.0.0"><![CDATA[There are no social forums to display.]]></phrase>
+    <phrase title="th_this_is_list_of_all_members_of_x_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[This is a list of all members who have joined {social_forum_title}.]]></phrase>
+    <phrase title="th_unwatch_social_category_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[Unwatch Social Category]]></phrase>
+    <phrase title="th_url_portions_contain_more_numbers_hyphen_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[URL portions must contain more than just numbers or a "-".]]></phrase>
+    <phrase title="th_url_portions_must_be_unique_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[URL portions must be unique. The specified name is already in use.]]></phrase>
+    <phrase title="th_url_portion_cannot_be_changed_once_set_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[The URL portion cannot be changed once set.]]></phrase>
+    <phrase title="th_url_portion_explain_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[Use a-z, 0-9, _, and - characters only.]]></phrase>
+    <phrase title="th_url_portion_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[URL Portion]]></phrase>
+    <phrase title="th_user_has_created_at_least_x_social_forums_usercriteria" version_id="1374199526" version_string="1.0.6"><![CDATA[User has created at least X social forums]]></phrase>
+    <phrase title="th_user_has_joined_at_least_x_social_forums_usercriteria" version_id="1374199526" version_string="1.0.6"><![CDATA[User has joined at least X social forums]]></phrase>
+    <phrase title="th_viewing_social_category_socialgroups" version_id="1357912834" version_string="1.0.2"><![CDATA[Viewing social category]]></phrase>
+    <phrase title="th_view_social_forum_members_socialgroups" version_id="1344344658" version_string="1.0.0"><![CDATA[View Social Forum Members]]></phrase>
+    <phrase title="th_watched_social_forums_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[Watched Social Forums]]></phrase>
+    <phrase title="th_watch_forum_when_join_social_forum_socialgroups" version_id="1344101760" version_string="1.0.0"><![CDATA[Watch forum when user joins social forum]]></phrase>
+    <phrase title="th_watch_social_category_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[Watch Social Category]]></phrase>
+    <phrase title="th_xs_social_forums_socialgroups" version_id="1362255625" version_string="1.0.2"><![CDATA[{username}'s Social Forums]]></phrase>
+    <phrase title="th_x_invited_you_to_social_forum_y_socialgroups" version_id="1344633650" version_string="1.0.0"><![CDATA[{name} has invited you to join the social forum {title}.]]></phrase>
+    <phrase title="th_x_requests_to_join_social_forum_y_socialgroups" version_id="1344636126" version_string="1.0.0"><![CDATA[{name} has requested to join the social forum {title}.]]></phrase>
+    <phrase title="th_your_social_forums_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[Your Social Forums]]></phrase>
+    <phrase title="th_your_social_forum_has_been_created_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Your social forum has been created.]]></phrase>
+    <phrase title="th_your_social_forum_has_been_updated_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[Your social forum has been updated.]]></phrase>
+    <phrase title="th_you_have_been_invited_to_x_socialgroups" version_id="1410855143" version_string="1.1.4"><![CDATA[You've been invited to {title}]]></phrase>
+    <phrase title="th_you_not_watching_any_social_forums_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[You are not watching any social forums.]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="social-categories" class="ThemeHouse_SocialGroups_Route_PrefixAdmin_SocialCategories" build_link="data_only"/>
+    </route_type>
+    <route_type type="public">
+      <prefix original_prefix="social-categories" class="ThemeHouse_SocialGroups_Route_Prefix_SocialCategories" build_link="data_only"/>
+      <prefix original_prefix="social-forums" class="ThemeHouse_SocialGroups_Route_Prefix_SocialForums" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates>
+    <template title="alert_social_forum_approve" version_id="1344633650" version_string="1.0.0"><![CDATA[{xen:phrase th_request_to_join_social_forum_x_approved_socialgroups,
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_invite" version_id="1344622337" version_string="1.0.0"><![CDATA[{xen:phrase th_x_invited_you_to_social_forum_y_socialgroups,
+	'name={xen:helper username, $user, 'subject'}',
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_moderator" version_id="1344636126" version_string="1.0.0"><![CDATA[{xen:phrase th_promoted_to_moderator_of_social_forum_x_socialgroups,
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_reject" version_id="1344636126" version_string="1.0.0"><![CDATA[{xen:phrase th_request_to_join_social_forum_x_rejected_socialgroups,
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_remove_moderator" version_id="1344636126" version_string="1.0.0"><![CDATA[{xen:phrase th_removed_as_moderator_of_social_forum_x_socialgroups,
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_request" version_id="1344636126" version_string="1.0.0"><![CDATA[{xen:phrase th_x_requests_to_join_social_forum_y_socialgroups,
+	'name={xen:helper username, $user, 'subject'}',
+	'title=<a href="{xen:link social-forums/members, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="alert_social_forum_revoke" version_id="1344636126" version_string="1.0.0"><![CDATA[{xen:phrase th_membership_of_social_forum_x_revoked_socialgroups,
+	'title=<a href="{xen:link social-forums, $content}" class="PopupItemLink">{$content.title}</a>'}]]></template>
+    <template title="th_accept_invite_topctrl_socialgroups" version_id="1368834376" version_string="1.0.2"><![CDATA[<xen:require css="th_SocialGroups.css" />
+<div class="breadBoxTop">
+	<nav>
+		<div class="topCtrl">
+			<a href="{xen:link social-forums/accept-invite, $socialForum}" class="callToAction" id="JoinGroupButton"><span class="inner">{xen:phrase th_accept_invite_socialgroups}</span></a>
+		</div>
+	</nav>
+</div>]]></template>
+    <template title="th_account_sidebar_your_account_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[<li><a class="primaryContent" href="{xen:link social-forums}">{xen:phrase th_your_social_forums_socialgroups}</a></li>]]></template>
+    <template title="th_account_social_forums_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[<xen:require js="js/themehouse/socialgroups/secondary_social_forums.js" />
+
+<xen:if is="{$socialForums}">
+<fieldset>
+	<xen:if is="{$xenOptions.th_SocialGroups_allowPrimary}">
+		<dl class="ctrlUnit">
+			<dt><label>{xen:phrase th_primary_social_forum_socialgroups}:</label></dt>
+			<dd>
+				<select name="primary_social_forum_id" class="textCtrl" id="ctrl_primary_social_forum_id">
+					<option {xen:selected "{$socialForumId}"}></option>
+					<xen:foreach loop="$socialForums" key="$socialForumId" value="$socialForum">
+						<option value="{$socialForumId}" {xen:selected "{$socialForumId} == {$visitor.primary_social_forum_id}"}>{$socialForum.title}</option>
+					</xen:foreach>
+				</select>
+			</dd>
+		</dl>
+	</xen:if>
+	<xen:if is="{$xenOptions.th_SocialGroups_allowSecondary}">
+		<dl class="ctrlUnit">
+			<dt><label>{xen:phrase th_secondary_social_forums_socialgroups}:</label></dt>
+			<dd>
+				<ul class="SecondarySocialForums" data-maxsecondarysocialforums="{$maxSecondarySocialForums}">
+					<xen:foreach loop="$socialForums" key="$socialForumId" value="$socialForum">
+						<li><label><input type="checkbox" name="secondary_social_forum_ids[]" value="{$socialForumId}" {xen:checked "{$visitor.secondary_social_forum_ids.{$socialForumId}}"} id="ctrl_secondary_social_forum_id_{$socialForumId}" />
+							<a href="{xen:link 'social-forums', {$socialForum}}">{$socialForum.title}</a></label>
+						</li>
+					</xen:foreach>
+				</ul>
+			</dd>
+		</dl>
+	</xen:if>
+</fieldset>
+</xen:if>]]></template>
+    <template title="th_create_fields_extra_socialgroups" version_id="0" version_string="1.0.0"><![CDATA[	<input type="hidden" name="social_forum_id" value="{$forum.social_forum_id}" />]]></template>
+    <template title="th_forum_list_socialgroups" version_id="1393261903" version_string="1.0.16"><![CDATA[<xen:require css="node_list.css" />
+<xen:require css="th_forum_list_socialgroups.css" />
+
+<xen:require js="js/themehouse/socialgroups/forum_list.js" />
+
+<xen:if hascontent="true">
+	<div class="section sectionMain socialForumList">
+		<ol class="nodeList" id="forums">
+		<xen:contentcheck>
+			<xen:if is="{$renderedNodes}">
+				<xen:foreach loop="$renderedNodes" value="$node">{xen:raw $node}</xen:foreach>
+			</xen:if>
+			<xen:if is="{$renderedSocialForums}">
+				<xen:foreach loop="$renderedSocialForums" value="$socialForum">{xen:raw $socialForum}</xen:foreach>
+			</xen:if>
+		</xen:contentcheck>
+		</ol>
+	
+		<xen:if is="{$forum}">
+			<h3 id="SocialForumListOptionsHandle" class="JsOnly"><a href="#">{xen:phrase th_social_forum_display_options_socialgroups}</a></h3>
+			
+			<form action="{xen:if {$forum}, {xen:link 'social-categories', $forum}, {xen:link 'social-forums'}}" method="post" class="SocialForumListOptions secondaryContent">
+			
+				<div class="controlGroup">
+					<label for="ctrl_order">{xen:phrase th_sort_social_forums_by_socialgroups}:</label>
+					<select name="order" id="ctrl_order" class="textCtrl">
+						<option value="last_post_date" {xen:selected "{$order} == 'last_post_date'"}>{xen:phrase last_message_time}</option>
+						<option value="title" {xen:selected "{$order} == 'title'"}>{xen:phrase title_alphabetical}</option>
+						<option value="discussion_count" {xen:selected "{$order} == 'discussion_count'"}>{xen:phrase th_number_of_discussions_socialgroups}</option>
+						<option value="member_count" {xen:selected "{$order} == 'member_count'"}>{xen:phrase th_number_of_members_socialgroups}</option>
+					</select>
+				</div>
+			
+				<div class="controlGroup">
+					<label for="ctrl_direction">{xen:phrase th_order_social_forums_in_socialgroups}:</label>
+					<select name="direction" id="ctrl_direction" class="textCtrl">
+						<option value="desc" {xen:selected "{$orderDirection} == 'desc'"}>{xen:phrase descending_order}</option>
+						<option value="asc" {xen:selected "{$orderDirection} == 'asc'"}>{xen:phrase ascending_order}</option>
+					</select>
+				</div>
+			
+				<div class="buttonGroup">
+					<input type="submit" class="button primary" value="{xen:phrase set_options}" />
+					<input type="reset" class="button" value="{xen:phrase cancel}" />
+				</div>
+			
+				<xen:if is="!{$forum}">		
+					<input type="hidden" name="filter" value="{$selectedTab}" />
+				</xen:if>
+				<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+			</form>
+		</xen:if>
+	</div>
+<xen:else />
+	<div class="primaryContent">
+	{xen:phrase th_there_are_no_social_forums_socialgroups}
+	</div>
+</xen:if>
+
+<xen:edithint template="node_category.css" />
+<xen:edithint template="node_category_level_1" />
+<xen:edithint template="node_category_level_2" />
+<xen:edithint template="node_category_level_n" />
+
+<xen:edithint template="node_forum.css" />
+<xen:edithint template="node_forum_level_1" />
+<xen:edithint template="node_forum_level_2" />
+<xen:edithint template="node_forum_level_n" />
+
+<xen:edithint template="node_page.css" />
+<xen:edithint template="node_page_level_1" />
+<xen:edithint template="node_page_level_2" />
+<xen:edithint template="node_page_level_n" />
+
+<xen:edithint template="node_link.css" />
+<xen:edithint template="node_link_level_1" />
+<xen:edithint template="node_link_level_2" />
+<xen:edithint template="node_link_level_n" />]]></template>
+    <template title="th_forum_list_socialgroups.css" version_id="1393076542" version_string="1.0.15"><![CDATA[.socialForumList
+{
+	position: relative;
+	zoom: 1;
+}
+
+.SocialForumListOptions
+{
+	{xen:property discussionListOptions}
+}
+
+.hasJs .SocialForumListOptions
+{
+	display: none;
+}
+
+	.SocialForumListOptions dl,
+	.SocialForumListOptions .controlGroup
+	{
+		float: left;
+		margin-right: 10px;
+		
+		overflow: hidden; zoom: 1;
+	}
+	
+		.SocialForumListOptions dt
+		{
+			float: left;
+		}
+		
+		.SocialForumListOptions dd
+		{
+			margin-left: 120px;
+		}
+		
+	.SocialForumListOptions .buttonGroup
+	{
+		float: right;
+	}
+	
+		.DiscussionListOptions .buttonGroup input
+		{
+			min-width: 75px;
+		}
+	
+#SocialForumListOptionsHandle
+{
+	{xen:property discussionListOptionsHandle}
+}
+	
+	#SocialForumListOptionsHandle a
+	{
+		{xen:property discussionListOptionsHandleLink}
+	}
+	
+.afterSocialForumListHandle
+{
+	margin-top: 20px;
+}]]></template>
+    <template title="th_forum_view_threads_before_socialgroups" version_id="1368834376" version_string="1.0.2"><![CDATA[<xen:require css="th_SocialGroups.css" />
+<div id="SocialForumDescription">
+<xen:if is="{$canEditSocialForum}"><a href="{xen:link 'social-forums/avatar', {$socialForum}}" class="OverlayTrigger"></xen:if>
+<span class="avatar NoOverlay Avsg-{$socialForum.social_forum_id}m"><img src="{$urls.m}" width="96" height="96" alt="{$socialForum.title}"></span>
+<xen:if is="{$canEditSocialForum}"></a></xen:if>
+<xen:if hascontent="true">
+	<div class="secondaryContent baseHtml messageText">
+	<xen:contentcheck>
+		{xen:raw $socialForum.description}
+	</xen:contentcheck>
+	</div>
+</xen:if>
+</div>]]></template>
+    <template title="th_join_social_forum_topctrl_socialgroups" version_id="1368834376" version_string="1.0.2"><![CDATA[<xen:require css="th_SocialGroups.css" />
+<div class="breadBoxTop">
+	<nav>
+		<div class="topCtrl">
+			<a href="{xen:link social-forums/join, $socialForum}" class="callToAction" id="JoinGroupButton"><span class="inner">{xen:phrase th_join_social_forum_socialgroups}</span></a>
+		</div>
+	</nav>
+</div>]]></template>
+    <template title="th_member_list_item_edit_socialgroups" version_id="1380235934" version_string="1.0.11"><![CDATA[<li>
+	<div class="memberListItemEdit inlineCtrlGroup">
+	
+		<ul class="optionsEdit editBlock">
+			<xen:if is="{$canApproveSocialForumJoinRequest} || {$canRejectSocialForumJoinRequest} || {$canRevokeSocialForumMembership}">
+				<li><label for="ctrl_is_social_forum_member_{$user.user_id}" title="{xen:phrase th_member_socialgroups}"><input type="checkbox" name="is_social_forum_member" value="1" id="ctrl_is_social_forum_member_{$user.user_id}"
+					{xen:if '(!{$user.is_approved} && !{$user.is_invited} && ({$canApproveSocialForumJoinRequest} || {$canRejectSocialForumJoinRequest})) || ({$user.is_approved} && {$canRevokeSocialForumMembership})', '', 'disabled="disabled"'}
+					{xen:checked "{$user.is_approved}"} /> {xen:phrase th_member_socialgroups}</label></li>
+			</xen:if>
+			<xen:if is="{$canAddSocialForumModerator} || {$canRemoveSocialForumModerator}">
+				<li><label for="ctrl_is_social_forum_moderator_{$user.user_id}" title="{xen:phrase th_moderator_socialgroups}"><input type="checkbox" name="is_social_forum_moderator" value="1" id="ctrl_is_social_forum_moderator_{$user.user_id}"
+					{xen:if '(!{$user.is_social_forum_moderator} && {$canAddSocialForumModerator}) || ({$user.is_social_forum_moderator} && {$canRemoveSocialForumModerator})', '', 'disabled="disabled"'}
+					{xen:checked "{$user.is_social_forum_moderator}"} /> {xen:phrase th_moderator_socialgroups}</label></li>
+			</xen:if>
+			<xen:if is="{$canAssignSocialForumCreator}">
+				<li><label for="ctrl_is_social_forum_creator_{$user.user_id}" title="{xen:phrase th_creator_socialgroups}"><input type="checkbox" name="is_social_forum_creator" value="1" id="ctrl_is_social_forum_creator_{$user.user_id}"
+					{xen:if '{$user.is_social_forum_creator}', 'disabled="disabled"'}
+					{xen:checked "{$user.is_social_forum_creator}"} /> {xen:phrase th_creator_socialgroups}</label></li>
+			</xen:if>
+		</ul>
+	
+		<div class="buttons editBlock">
+			<img src="{xen:property imagePath}/xenforo/widgets/ajaxload.info_000000_facebook.gif" class="AjaxSaveProgress" alt="" />
+			<input type="submit" value="{xen:phrase save}" class="textCtrl primary" id="ctrl_submit_{$user.user_id}" data-submitUrl="{xen:link 'social-forums/member-save', $socialForum, 'user_id={$user.user_id}'}" />
+			<input type="reset"  value="{xen:phrase cancel}" class="textCtrl" id="ctrl_reset_{$user.user_id}" />
+		</div>
+		
+	</div>	
+</li>]]></template>
+    <template title="th_member_list_item_edit_socialgroups.css" version_id="1364590476" version_string="1.0.2"><![CDATA[.memberListItem .controls {
+	float: right;
+	padding-left: 20px;
+}
+
+/* slide-open editor */
+
+.memberList .memberListItemEdit
+{
+	border-bottom: 1px solid #ccc;
+	overflow: hidden; zoom: 1;
+}
+
+	.memberListItemEdit .editBlock
+	{
+		float: left;
+		padding: 0 10px;
+		line-height: 45px;
+	}
+		
+		.memberListItemEdit .titleEdit > .titleField
+		{
+			width: 270px;
+		}
+		
+			.memberListItemEdit .titleEdit .textCtrlWrap
+			{
+				line-height: 14px;
+				height: 14px;
+			}
+		
+		.memberListItemEdit .optionsEdit li
+		{
+			float: left;
+			margin-right: 10px;
+		}
+		
+	.memberListItemEdit .buttons
+	{
+		float: right;		
+	}
+	
+		.memberListItemEdit .buttons .AjaxSaveProgress
+		{
+			vertical-align: middle;
+			visibility: hidden;
+		}
+	
+			.memberListItemEdit.InProgress .buttons .AjaxSaveProgress
+			{
+				visibility: visible;
+			}
+		
+		.memberListItemEdit .buttons input
+		{
+			_width: 100px;
+			min-width: 65px;
+		}]]></template>
+    <template title="th_member_list_item_socialgroups" version_id="1364590476" version_string="1.0.2"><![CDATA[<xen:require css="xenforo_member_list_item.css" />
+<xen:require css="th_member_list_item_edit_socialgroups.css" />
+
+<xen:if is="{$user.user_id}">
+		
+	<li class="primaryContent memberListItem{xen:if $extended, ' extended'}"{xen:if $id, ' id="{$id}"'}>
+		<xen:avatar user="$user" size="s" class="{xen:if $noOverlay, 'NoOverlay'}" />
+
+		<xen:if is="{$extraTemplate}"><div class="extra">{xen:raw $extraTemplate}</div></xen:if>
+
+		<div class="member">
+	
+			<h3 class="username"><xen:username user="$user" rich="true" class="StatusTooltip{xen:if $noOverlay, ' NoOverlay'}" title="{xen:string censor, $user.status}" /></h3>
+			
+			<div class="userInfo">
+				<div class="userBlurb dimmed">{xen:helper userBlurb, $user}</div>
+				<xen:if is="{$canEditInline}">
+					<div class="controls faint">
+						<a href="javascript:" data-href="{xen:link 'social-forums/member-list-item-edit', $socialForum, 'user_id={$user.user_id}'}" class="EditControl JsOnly">{xen:phrase edit}</a>
+					</div>
+				</xen:if>
+				<xen:if is="{$user.is_invited}">
+					<dl class="userStats pairsInline">
+						<dt>{xen:phrase th_invited_socialgroups}:</dt> <dd>{xen:date $user.join_date}</dd>
+					</dl>
+				<xen:elseif is="{$user.is_approved}" />
+					<dl class="userStats pairsInline">
+						<dt>{xen:phrase th_social_forum_member_since_socialgroups}:</dt> <dd>{xen:date $user.join_date}</dd>
+					</dl>
+				</xen:if>
+			</div>
+					
+			<xen:if hascontent="true">
+				<div class="contentInfo"><xen:contentcheck>{xen:raw $contentTemplate}</xen:contentcheck></div>
+			</xen:if>
+		
+		</div>
+	</li>
+
+</xen:if>]]></template>
+    <template title="th_member_list_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[<xen:title>{xen:phrase th_social_forum_members_socialgroups}{xen:helper pagenumber, $page}</xen:title>
+<xen:h1>{xen:phrase th_social_forum_members_socialgroups}</xen:h1>
+
+<xen:description>{xen:phrase th_this_is_list_of_all_members_of_x_socialgroups, 'social_forum_title={$socialForum.title}'}</xen:description>
+
+<xen:container var="$head.canonical">
+	<link rel="canonical" href="{xen:link 'canonical:social-forums/members', {$socialForum}, 'page={$page}'}" /></xen:container>
+
+<xen:require css="member_list.css" />
+<xen:require css="xenforo_member_list_item.css" />
+<xen:require css="inline_mod.css" />
+		
+<xen:require js="js/themehouse/socialgroups/member_list.js" />
+
+<div class="pageNavLinkGroup">
+	<xen:pagenav link="social-forums/members" linkdata="{$socialForum}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" />
+</div>
+
+<div class="socialForumMembersTabs">
+	<ul class="tabs">
+		<li class="socialForumMembersTabAll {xen:if "{$selectedTab} == 'all'", active}">
+			<a href="{xen:link social-forums/members, $socialForum}">{xen:phrase th_all_socialgroups}</a>
+		</li>
+		<li class="socialForumMembersTabCreator {xen:if "{$selectedTab} == 'creator'", active}">
+			<a href="{xen:link social-forums/members, $socialForum, 'filter=creator'}">{xen:phrase th_creator_socialgroups}</a>
+		</li>
+		<li class="socialForumMembersTabModerator {xen:if "{$selectedTab} == 'moderator'", active}">
+			<a href="{xen:link social-forums/members, $socialForum, 'filter=moderator'}">{xen:phrase th_moderator_socialgroups}</a>
+		</li>
+		<li class="socialForumMembersTabMember {xen:if "{$selectedTab} == 'member'", active}">
+			<a href="{xen:link social-forums/members, $socialForum, 'filter=member'}">{xen:phrase th_member_socialgroups}</a>
+		</li>
+		<xen:if is="{$canApproveSocialForumJoinRequest}">
+			<li class="socialForumMembersTabAwaiting {xen:if "{$selectedTab} == 'awaiting'", active}">
+				<a href="{xen:link social-forums/members, $socialForum, 'filter=awaiting'}">{xen:phrase th_awaiting_socialgroups}</a>
+			</li>
+			<li class="socialForumMembersTabInvited {xen:if "{$selectedTab} == 'invited'", active}">
+				<a href="{xen:link social-forums/members, $socialForum, 'filter=invited'}">{xen:phrase th_invited_socialgroups}</a>
+			</li>
+		</xen:if>
+	</ul>
+</div>
+
+<form action="{xen:link inline-mod/social-forum-member/switch}" method="post"
+	class="SocialMemberList InlineModForm"
+	data-cookieName="social-forum-members"
+	data-controls="#InlineModControls"
+	data-imodOptions="#ModerationSelect option">
+
+<xen:if is="{$users}">
+	<ol class="section memberList">
+		<xen:foreach loop="$users" value="$user">
+			<xen:include template="th_member_list_item_socialgroups">
+				<xen:set var="$noOverlay">1</xen:set>
+				<xen:set var="$id">member-{$user.user_id}</xen:set>
+			</xen:include>
+		</xen:foreach>
+	</ol>
+<xen:else />
+	<div class="primaryContent">
+		{xen:phrase th_no_social_forum_members_socialgroups}
+	</div>
+</xen:if>
+	
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>
+
+<div class="pageNavLinkGroup">
+	<xen:pagenav link="social-forums/members" linkdata="{$socialForum}" page="{$page}" perpage="{$usersPerPage}" total="{$totalUsers}" />
+</div>]]></template>
+    <template title="th_member_social_forums_socialgroups" version_id="1362255625" version_string="1.0.2"><![CDATA[<xen:title>{xen:phrase th_xs_social_forums_socialgroups, 'username={$user.username}'}</xen:title>
+
+<ol class="nodeList" id="forums">
+	<xen:if is="{$socialForums}">
+		<xen:foreach loop="$socialForums" value="$forum">
+			<xen:include template="th_social_forum_list_item_socialgroups" />
+		</xen:foreach>
+	<xen:else />
+		{xen:phrase th_not_member_of_any_social_forums_socialgroups}
+	</xen:if>
+</ol>
+]]></template>
+    <template title="th_member_view_tabs_content_socialgroups" version_id="1381259041" version_string="1.0.11"><![CDATA[<xen:if is="{$user.social_forums_joined}">
+	<li id="socialForums" class="profileContent" data-loadUrl="{xen:link members/social-forums, $user}">
+		<span class="jsOnly">{xen:phrase loading}...</span>
+		<noscript><a href="{xen:link members/social-forums, $user}">{xen:phrase th_social_forums_socialgroups}</a></noscript>
+	</li>
+</xen:if>]]></template>
+    <template title="th_member_view_tabs_heading_socialgroups" version_id="1381259041" version_string="1.0.11"><![CDATA[<xen:if is="{$user.social_forums_joined}">
+	<li><a href="{$requestPaths.requestUri}#social-forums">{xen:phrase th_social_forums_socialgroups}</a></li>
+</xen:if>]]></template>
+    <template title="th_message_user_info_socialgroups" version_id="1370026863" version_string="1.0.4"><![CDATA[<xen:require css="th_message_user_info_socialgroups.css" />
+<xen:if hascontent="true">
+	<ol class="listInline socialPostBit">
+		<xen:contentcheck>
+			<xen:if is="{$user.primary_social_forum_id} && {$xenOptions.th_SocialGroups_primaryPostBit}">
+				<xen:if is="{$xenOptions.th_SocialGroups_extendedPostBit}">
+					<li class="extended"><a href="{xen:link 'social-forums', $user.primarySocialForum}" class="avatar Av{$socialForumId}s Tooltip NoOverlay" title="{$user.social_forum_title}" data-avatarHtml="true"><img class="img s" src="{$user.primary_social_forum_urls.s}" /><span>{xen:helper wordTrim, {$user.social_forum_title}, 15}</span></a></li>
+				<xen:else />
+					<li><a href="{xen:link 'social-forums', $user.primarySocialForum}" class="avatar Av{$socialForumId}s Tooltip NoOverlay" title="{$user.social_forum_title}" data-avatarHtml="true"><span class="img s" style="background-image: url('{$user.primary_social_forum_urls.s}')">{$user.social_forum_title}</span></a></li>
+				</xen:if>
+			</xen:if>
+			<xen:if is="{$user.secondary_social_forums} && {$xenOptions.th_SocialGroups_secondaryPostBit}">
+				<xen:foreach loop="{$user.secondary_social_forums}" key="$socialForumId" value="$socialForum">
+					<xen:if is="{$xenOptions.th_SocialGroups_extendedPostBit}">
+						<li class="extended"><a href="{xen:link 'social-forums', $socialForum}" class="avatar Av{$socialForumId}s Tooltip NoOverlay" title="{$socialForum.title}" data-avatarHtml="true"><img class="img s" src="{$socialForum.urls.s}" /><span>{xen:helper wordTrim, {$socialForum.title}, 15}</span></a></li>
+					<xen:else />
+						<li><a href="{xen:link 'social-forums', $socialForum}" class="avatar Av{$socialForumId}s Tooltip NoOverlay" title="{$socialForum.title}" data-avatarHtml="true"><span class="img s" style="background-image: url('{$socialForum.urls.s}')">{$socialForum.title}</span></a></li>
+					</xen:if>
+				</xen:foreach>
+			</xen:if>
+		</xen:contentcheck>
+	</ol>
+</xen:if>]]></template>
+    <template title="th_message_user_info_socialgroups.css" version_id="1377626811" version_string="1.0.9"><![CDATA[ol.socialPostBit
+{
+	overflow: auto;
+	padding-top: 4px;
+	margin-right: -2px;
+}
+
+ol.socialPostBit li
+{
+	float: left;
+	padding: 2px 2px 0 0;
+}
+
+ol.socialPostBit li.extended
+{
+	width: 98%;
+}
+
+ol.socialPostBit li.extended img
+{
+	width: 15px;
+	height: 15px;
+	float: left;
+}
+
+ol.socialPostBit li.extended span
+{
+	float: left;
+	padding: 4px 0 0 2px;
+	font-size: 11px;
+}]]></template>
+    <template title="th_navigation_visitor_tab_links_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[<li><a href="{xen:link social-forums}">{xen:phrase th_your_social_forums_socialgroups}</a></li>]]></template>
+    <template title="th_node_level_1_socialgroups" version_id="1361754083" version_string="1.0.2"><![CDATA[<xen:include template="th_node_level_2_socialgroups" />]]></template>
+    <template title="th_node_level_2_socialgroups" version_id="1361754083" version_string="1.0.2"><![CDATA[<xen:require css="node_list.css" />
+<xen:require css="node_forum.css" />
+
+<li class="node forum level_{$level} {xen:if '{$level} == 1 AND !{$renderedChildren}', 'groupNoChildren'} node_{$forum.node_id}">
+
+	<xen:if is="{$level} == 1"><div class="categoryStrip subHeading"></div></xen:if>
+
+	<div class="nodeInfo forumNodeInfo primaryContent {xen:if $forum.hasNew, 'unread'}">
+
+		<span class="nodeIcon" title="{xen:if $forum.hasNew, '{xen:phrase unread_messages}', ''}"></span>
+
+		<div class="nodeText">
+			<h3 class="nodeTitle"><a href="{xen:link social-categories, $forum}" data-description="{xen:if {xen:property nodeListDescriptionTooltips}, '#nodeDescription-{$forum.node_id}'}">{$forum.title}</a></h3>
+
+			<xen:if is="{$forum.description} AND {xen:property nodeListDescriptions}">
+				<blockquote class="nodeDescription {xen:if {xen:property nodeListDescriptionTooltips}, nodeDescriptionTooltip} baseHtml" id="nodeDescription-{$forum.node_id}">{xen:raw $forum.description}</blockquote>
+			</xen:if>
+
+			<div class="nodeStats pairsInline">
+				<dl>
+					<dt>{xen:phrase discussions}:</dt> <dd>{xen:if $forum.privateInfo, '&ndash;', {xen:number $forum.discussion_count}}</dd>
+					<dt>{xen:phrase messages}:</dt> <dd>{xen:if $forum.privateInfo, '&ndash;', {xen:number $forum.message_count}}</dd>
+				</dl>
+				<xen:if is="{$renderedChildren} AND {$level} == 2">
+					<div class="Popup subForumsPopup">
+						<a href="{xen:link social-categories, $forum}" rel="Menu" class="cloaked" data-closemenu="true"><span class="dt">{xen:phrase sub_forums}:</span> {xen:number $forum.childCount}</a>
+						
+						<div class="Menu JsOnly subForumsMenu">
+							<div class="primaryContent menuHeader">
+								<h3>{$forum.title}</h3>
+								<div class="muted">{xen:phrase sub_forums}</div>
+							</div>
+							<ol class="secondaryContent blockLinksList">
+							<xen:foreach loop="$renderedChildren" value="$child">
+								{xen:raw $child}
+							</xen:foreach>
+							</ol>
+						</div>
+					</div>
+				</xen:if>
+			</div>
+		</div>
+		
+		<xen:hook name="node_forum_level_2_before_lastpost" />
+
+		<div class="nodeLastPost secondaryContent">
+			<xen:if is="{$forum.privateInfo}">
+				<span class="noMessages muted">({xen:phrase private})</span>
+			<xen:elseif is="{$forum.lastPost.date}" />
+				{xen:phrase latest}: <a href="{xen:link posts, $forum.lastPost}" title="{$forum.lastPost.title}">{xen:helper wordTrim, $forum.lastPost.title, 30}</a>
+				<span class="lastThreadMeta"><xen:if is="{xen:helper isIgnored, $forum.last_post_user_id}">{xen:phrase ignored_member}<xen:else /><xen:username user="$forum.lastPost" /></xen:if>, <xen:datetime time="$forum.lastPost.date" class="muted" /></span>
+			<xen:else />
+				<span class="noMessages muted">({xen:phrase contains_no_messages})</span>
+			</xen:if>
+		</div>
+
+		<div class="nodeControls">
+			<a href="{xen:link social-categories/index.rss, $forum}" class="tinyIcon feedIcon" title="{xen:phrase rss}">{xen:phrase rss}</a>
+		</div>
+		
+	</div>
+
+	<xen:if is="{$renderedChildren} AND {$level} == 1">
+		<ol class="nodeList">
+			<xen:foreach loop="$renderedChildren" value="$child">{xen:raw $child}</xen:foreach>
+		</ol>
+	</xen:if>
+
+</li>]]></template>
+    <template title="th_node_level_n_socialgroups" version_id="1361754083" version_string="1.0.2"><![CDATA[<li class="node forum level-n node_{$forum.node_id}">
+	<div {xen:if $forum.hasNew, 'class="unread"'}>
+		<h4 class="nodeTitle"><a href="{xen:link social-categories, $forum}" class="menuRow">{$forum.title}</a></h4>
+	</div>
+	<xen:if is="{$renderedChildren}">
+		<ol>
+			<xen:foreach loop="$renderedChildren" value="$child">
+				{xen:raw $child}
+			</xen:foreach>
+		</ol>
+	</xen:if>
+</li>]]></template>
+    <template title="th_node_list_socialgroups.css" version_id="1369349596" version_string="1.0.2"><![CDATA[.socialForumAvatar
+{
+	margin: 10px;
+	float:left;
+}]]></template>
+    <template title="th_resource_view_tabs_socialgroups" version_id="1369523180" version_string="1.0.2"><![CDATA[<xen:if is="{$resource.social_forum_id}"><li class="resourceTabDiscussion {xen:if "{$selectedTab} == 'discussion'", active}">
+	<a href="{xen:link social-forums, $resource}">{xen:phrase discussion}</a>
+</li></xen:if>]]></template>
+    <template title="th_sidebar_join_button_socialgroups" version_id="1380235934" version_string="1.0.11"><![CDATA[<xen:if is="{$visitor.user_id} && !{$member.social_forum_member_id} && {$canJoinSocialForum}">
+	<div class="section loginButton">
+		<div class="secondaryContent">
+			<label for="LoginControl" id="SignupButton"><a href="{xen:link social-forums/join, $socialForum, '_xfToken={$visitor.csrf_token_page}'}" class="inner">{xen:phrase th_join_social_forum_socialgroups}</a></label>
+		</div>
+	</div>
+
+<xen:elseif is="{$member.social_forum_member_id}" />
+	<xen:if hascontent="true">
+		<div class="section">		
+			<div class="secondaryContent">
+				<xen:contentcheck>
+					<xen:if is="{$member.is_invited}">
+						<label for="LoginControl" id="SignupButton"><a href="{xen:link social-forums/accept-invite, $socialForum, '_xfToken={$visitor.csrf_token_page}'}" class="inner">{xen:phrase th_accept_invite_socialgroups}</a></label>
+					<xen:elseif is="!{$member.is_approved}" />
+						{xen:phrase th_awaiting_approval_socialgroups}
+					</xen:if>
+				</xen:contentcheck>
+			</div>
+		</div>
+	</xen:if>
+</xen:if>]]></template>
+    <template title="th_SocialGroups.css" version_id="1385769155" version_string="1.0.11"><![CDATA[.socialGroupAlerts
+{
+	border: 1px solid {xen:property primaryLighterStill};
+	border-radius: 5px;
+	font-size: 11px;
+	margin: 10px 0;
+	padding: 5px;
+	line-height: 16px;
+	background-image: url('{xen:property imagePath}/xenforo/gradients/form-button-white-25px.png');
+}
+	
+	.socialGroupAlerts  dt
+	{
+		color: {xen:property primaryLight};
+		display: inline;
+	}
+	
+	.socialGroupAlerts  dd
+	{
+		color: {xen:property primaryDark};
+		font-weight: bold;
+		display: inline;
+	}
+	
+		.socialGroupAlerts .icon
+		{
+			float: right;
+			width: 16px;
+			height: 16px;
+			margin-left: 5px;
+			background: url('{xen:property imagePath}/xenforo/xenforo-ui-sprite.png') no-repeat -1000px -1000px;
+		}
+		
+			.socialGroupAlerts .moderatedAlert .icon { background-position: -32px -16px; }
+	
+
+#JoinGroupButton
+{
+	background-color: {xen:property textCtrlBackground};
+	border: 1px solid {xen:property secondaryLight};
+}
+
+#JoinGroupButton .inner
+{
+	background: {xen:property secondaryMedium} url('styles/default/xenforo/gradients/form-button-white-25px.png') repeat-x center -7px;
+}
+
+#JoinGroupButton:hover .inner
+{
+	background-color: {xen:property secondaryLight};
+}
+
+#JoinGroupButton:active .inner
+{
+	background-color: {xen:property secondaryDarker};
+}
+
+#SocialForumDescription
+{
+	min-height: 60px;
+}
+
+#SocialForumDescription .avatar
+{
+	float:right;
+	margin-top: -40px;
+}
+
+.socialCount
+{
+	font-size: 11px;
+	float: right;
+	color: {xen:property textCtrlBackground};
+	background-color: {xen:property primaryLightish};
+	border: 1px solid {xen:property primaryLighter};
+	border-radius: 4px;
+	padding: 1px 4px;
+}
+
+.socialMembersList ol
+{
+	width: 230px;
+	overflow: auto;
+}
+
+.socialMembersList ol li
+{
+	float: left;
+	padding: 0 3px 3px 0;
+}]]></template>
+    <template title="th_social_category_view_socialgroups" version_id="1390995914" version_string="1.0.13"><![CDATA[<xen:title>{$forum.title}{xen:helper pagenumber, $page}</xen:title>
+<xen:h1>{$forum.title}</xen:h1>
+
+<xen:if is="{$forum.description} AND {xen:property threadListDescriptions}">
+	<xen:description class="baseHtml">{xen:raw $forum.description}</xen:description>
+</xen:if>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:container var="$head.canonical">
+	<link rel="canonical" href="{xen:link 'canonical:forums', $forum, 'page={$page}'}" /></xen:container>
+
+<xen:container var="$head.rss">
+	<link rel="alternate" type="application/rss+xml" title="{xen:phrase rss_feed_for_x, 'title={$forum.title}'}" href="{xen:link forums/index.rss, $forum}" /></xen:container>
+
+<xen:container var="$quickNavSelected">node-{$forum.node_id}</xen:container>
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<xen:if is="{$canCreateSocialForum}">
+	<xen:topctrl><a href="{xen:link 'social-categories/create-social-forum', $forum}" class="callToAction"><span>{xen:phrase create_new_social_forum}</span></a></xen:topctrl>
+</xen:if>
+
+<xen:if is="{$showPostedNotice}">
+	<div class="importantMessage">{xen:phrase message_submitted_displayed_pending_approval}</div>
+</xen:if>
+
+<div class="pageNavLinkGroup">
+
+	<div class="linkGroup SelectionCountContainer">
+		<xen:if is="{$canWatchForum}">
+			<a href="{xen:link 'social-categories/watch', $forum}" class="OverlayTrigger" data-cacheOverlay="false">{xen:if $forum.forum_is_watched, '{xen:phrase th_unwatch_social_category_socialgroups}', '{xen:phrase th_watch_social_category_socialgroups}'}</a>
+		</xen:if>
+	</div>
+
+	<xen:pagenav link="social-categories" linkdata="{$forum}" linkparams="{$pageNavParams}" page="{$page}" perpage="{$socialForumsPerPage}" total="{$totalSocialForums}" />
+
+</div>
+
+<xen:include template="th_forum_list_socialgroups" />
+
+<div class="pageNavLinkGroup">
+	<div class="linkGroup">
+		<xen:if is="{$canCreateSocialForum}">
+			<a href="{xen:link 'social-categories/create-social-forum', $forum}" class="callToAction"><span>{xen:phrase create_new_social_forum}</span></a>
+		</xen:if>
+	</div>
+	
+	<xen:pagenav link="social-categories" linkdata="{$forum}" linkparams="{$pageNavParams}" page="{$page}" perpage="{$socialForumsPerPage}" total="{$totalSocialForums}" />
+</div>]]></template>
+    <template title="th_social_category_watch_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[<xen:if is="{$forumWatch}">
+	<xen:title>{xen:phrase th_unwatch_social_category_socialgroups} - {$forum.title}</xen:title>
+<xen:else />
+	<xen:title>{xen:phrase th_watch_social_category_socialgroups} - {$forum.title}</xen:title>
+</xen:if>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<form action="{xen:link 'social-categories/watch', $forum}" method="post" class="xenForm formOverlay AutoValidator">
+
+	<xen:if is="{$forumWatch}">
+		<dl class="ctrlUnit submitUnit">
+			<dt></dt>
+			<dd>
+				<input type="hidden" name="stop" value="stop" />
+				<input type="submit" value="{xen:phrase th_unwatch_social_category_socialgroups}" class="button primary" />
+			</dd>
+		</dl>
+	<xen:else />
+		<xen:if is="{$forum.allowed_watch_notifications} != 'none'">
+			<dl class="ctrlUnit">
+				<dt>{xen:phrase send_notifications_for}:</dt>
+				<dd>
+					<ul>
+						<li>
+							<label>
+								<input type="radio" name="notify_on" value="thread" checked="checked" />
+								{xen:phrase new_threads}
+							</label>
+						</li>
+						<xen:if is="{$forum.allowed_watch_notifications} == 'all'">
+							<li>
+								<label>
+									<input type="radio" name="notify_on" value="message" />
+									{xen:phrase new_messages}
+								</label>
+							</li>
+						</xen:if>
+						<li>
+							<label>
+								<input type="radio" name="notify_on" value="" />
+								{xen:phrase dont_send_notifications}
+								<p class="hint">{xen:phrase no_notifications_forum_watch_description}</p>
+							</label>
+						</li>
+					</ul>
+				</dd>
+			</dl>
+
+			<dl class="ctrlUnit">
+				<dt>{xen:phrase send_notifications_via}:</dt>
+				<dd>
+					<ul>
+						<li>
+							<label>
+								<input type="checkbox" name="send_alert" value="1" checked="checked" />
+								{xen:phrase alerts}
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="checkbox" name="send_email" value="1" />
+								{xen:phrase emails}
+							</label>
+						</li>
+					</ul>
+				</dd>
+			</dl>
+		</xen:if>
+
+		<dl class="ctrlUnit submitUnit">
+			<dt></dt>
+			<dd>
+				<input type="submit" value="{xen:phrase th_watch_social_category_socialgroups}" class="button primary" />
+			</dd>
+		</dl>
+	</xen:if>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+</form>]]></template>
+    <template title="th_social_forum_avatar_socialgroups" version_id="1339941795" version_string="1.0.0"><![CDATA[<xen:title>{xen:phrase avatar_editor}</xen:title>
+
+<xen:require css="account_avatar_overlay.css" />
+<xen:require js="js/xenforo/avatar_editor.js" />
+
+<form action="{xen:link social-forums/avatar-upload, $socialForum}" method="post" enctype="multipart/form-data"
+	class="AvatarEditor AutoInlineUploader formOverlay"
+	data-overlayClass="avatarEditor"
+	data-maxWidth="{$maxWidth}">
+
+	<div class="currentAvatar">
+		<label for="ctrl_avatar" class="avatar NoOverlay Avsg-{$socialForum.social_forum_id}l"><img src="{$urls.l}" alt="{xen:phrase current_avatar}" /></label>
+	</div>
+
+	<ul class="modifyControls">
+
+		<li class="avatarOption">
+			<div class="avatarCropper avatarLabel" style="width: {$maxWidth}px; height: {$maxWidth}px">
+				<label for="ctrl_useGravatar_0" class="AvatarCropControl avatar NoOverlay Avsg-{$socialForum.social_forum_id}l" style="width: {$maxWidth}px; height: {$maxWidth}px">
+					<img src="{$urls.l}" style="{$maxDimension}: {$maxWidth}px" alt="{xen:phrase avatar}" />
+				</label>
+			</div>
+
+			<input type="radio" name="use_gravatar" value="0" checked="checked" class="Disabler radioOption" id="ctrl_useGravatar_0" />
+
+			<div class="labelText" id="ctrl_useGravatar_0_Disabler">
+				<label for="ctrl_useGravatar_0" id="ExistingCustom">
+					{xen:phrase use_custom_avatar}
+					<span class="explain faint">
+						{xen:phrase drag_image_to_crop_then_click_okay_or_upload_new_avatar}
+					</span>
+				</label>
+
+				<label for="ctrl_avatar" class="ClickProxy" rel="#ctrl_useGravatar_0" data-allowDefault="1">{xen:phrase upload_new_custom_avatar}:</label>
+				<input type="file" name="avatar" class="textCtrl" onchange="this.blur()" id="ctrl_avatar" title="{xen:phrase supported_formats_jpeg_png_gif}" />
+				<div class="explain faint">{xen:phrase it_is_recommended_that_you_use_image_that_is_at_least_200x200_pixels}</div>
+			</div>
+		</li>
+
+		<li class="submitUnit saveDeleteControls">
+			<label for="DeleteAvatar" class="deleteCtrl"><input type="checkbox" name="delete" value="1" id="DeleteAvatar" /> {xen:phrase delete_current_avatar_question}</label>
+			<span class="buttons">
+				<input type="submit" value="{xen:phrase okay}" class="button primary" accesskey="s" id="ctrl_save" />
+				<input type="reset" value="{xen:phrase close}" class="button OverlayCloser overlayOnly" accesskey="d" />
+			</span>
+		</li>
+	</ul>
+
+
+	<input type="hidden" name="avatar_date" value="{$socialForum.avatar_date}" />
+	<input type="hidden" name="avatar_crop_x" value="{$cropX}" />
+	<input type="hidden" name="avatar_crop_y" value="{$cropY}" />
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+
+</form>]]></template>
+    <template title="th_social_forum_container_socialgroups" version_id="1385769155" version_string="1.0.11"><![CDATA[<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:require css="th_SocialGroups.css" />
+
+<xen:hook name="th_social_forum_description_above_socialgroups" />
+
+<xen:set var="$groupStatusHtml">
+	<xen:if hascontent="true">
+		<dl class="socialGroupAlerts secondaryContent">
+			<dt>{xen:phrase th_social_forum_status_socialgroups}:</dt>
+			<xen:contentcheck>
+				<xen:if is="{$socialForum.group_state} == 'moderated'">
+					<dd class="moderatedAlert">
+						<span class="icon Tooltip" title="{xen:phrase awaiting_moderation}" data-tipclass="iconTip"></span>
+							{xen:phrase awaiting_moderation_before_being_displayed_publicly}</dd>
+				</xen:if>
+			</xen:contentcheck>
+		</dl>
+	</xen:if>
+</xen:set>
+{xen:raw $groupStatusHtml}
+
+<div id="SocialForumDescription" class="secondaryContent">
+	<xen:hook name="th_social_forum_description_socialgroups">
+	<xen:if hascontent="true">
+		<div class="baseHtml messageText">
+		<xen:contentcheck>
+			{xen:raw $socialForum.description}
+		</xen:contentcheck>
+		</div>
+	</xen:if>
+	</xen:hook>
+</div>
+
+{xen:raw $_subView}
+
+<xen:require css="sidebar.css" />
+
+<xen:sidebar>
+	<xen:hook name="th_social_forum_sidebar_socialgroups">
+	<xen:hook name="th_social_forum_sidebar_info_socialgroups">
+	<div class="section visitorPanel">
+		<div class="secondaryContent">
+			<xen:if is="{$canEditSocialForum}"><a href="{xen:link 'social-forums/avatar', {$socialForum}}" class="OverlayTrigger"></xen:if>
+			<span class="avatar NoOverlay Avsg-{$socialForum.social_forum_id}m"><img src="{$urls.m}" width="96" height="96" alt="{$socialForum.title}"></span>
+			<xen:if is="{$canEditSocialForum}"></a></xen:if>
+			<div class="visitorText">
+				<div class="stats pairsJustified">
+					<dl><dt>{xen:phrase members}:</dt> <dd>{xen:number $socialForumMemberCount}</dd></dl>
+				</div>
+			</div>
+		</div>
+	</div>
+	</xen:hook>
+
+	<xen:hook name="th_social_forum_sidebar_below_info_socialgroups" />
+
+	<xen:include template="th_sidebar_join_button_socialgroups" />
+	
+	<xen:if is="{$socialForumModerators}">
+		<div class="section avatarList">
+			<div class="secondaryContent socialModeratorsList">
+				<h3><a href="{xen:link social-forums/members, $socialForum}">{xen:phrase th_social_forum_moderators_socialgroups} <span class="socialCount">{xen:count $socialForumModerators}</span></a></h3>
+				<ul>
+					<xen:foreach loop="$socialForumModerators" value="$user">
+						<li>
+							<xen:avatar user="$user" size="s" img="true" />
+							<xen:username user="$user" rich="true" />
+							<div class="userTitle">{xen:helper userTitle, $user}</div>
+						</li>
+					</xen:foreach>
+				</ul>
+			</div>
+		</div>
+	</xen:if>
+
+	<xen:if is="{$socialForumMembers}">
+		<div class="section">
+			<div class="secondaryContent socialMembersList">
+				<h3><a href="{xen:link social-forums/members, $socialForum}">{xen:phrase th_social_forum_members_socialgroups} <span class="socialCount">{xen:count $socialForumMembers}</span></a></h3>
+				<ol class="listInline">
+					<xen:foreach loop="$socialForumMembers" value="$user" i="$i">
+						<li><xen:avatar user="$user" size="s" text="{$user.username}" class="Tooltip" title="{$user.username}" /></li>
+					</xen:foreach>
+				</ol>
+			</div>
+		</div>
+	</xen:if>
+
+	<xen:if is="{$socialForumUnapprovedMembers}">
+		<div class="section">
+			<div class="secondaryContent socialMembersList">
+				<h3><a href="{xen:link social-forums/members, $socialForum}">{xen:phrase th_members_awaiting_approval_socialgroups} <span class="socialCount">{xen:count $socialForumUnapprovedMembers}</span></a></h3>
+				<ol class="listInline">
+					<xen:foreach loop="$socialForumUnapprovedMembers" value="$user" i="$i">
+						<li><xen:avatar user="$user" size="s" text="{$user.username}" class="Tooltip" title="{$user.username}" /></li>
+					</xen:foreach>
+				</ol>
+			</div>
+		</div>
+	</xen:if>
+
+	<xen:if is="{$canInviteMembers}">
+		<div class="section infoblock">
+			<form action="{xen:link social-forums/invite, {$socialForum}}" method="post" class="secondaryContent findMember">
+				<h3>{xen:phrase th_invite_member_socialgroups}</h3>
+					
+				<input type="search" name="username" placeholder="{xen:phrase name}..." results="0" class="textCtrl AutoComplete" data-autoSubmit="true" />
+				<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+			</form>
+		</div>
+	</xen:if>
+	</xen:hook>
+
+	<xen:include template="sidebar_share_page" />
+	
+</xen:sidebar>]]></template>
+    <template title="th_social_forum_create_preview_socialgroups" version_id="1401813131" version_string="1.1.1"><![CDATA[<div class="section">
+	<h3 class="subHeading">{xen:phrase preview}</h3>
+	<div class="messageText primaryContent baseHtml">{xen:raw $descriptionParsed}</div>
+</div>]]></template>
+    <template title="th_social_forum_create_socialgroups" version_id="1369257081" version_string="1.0.2"><![CDATA[<xen:title>{xen:phrase th_create_social_forum_socialgroups}</xen:title>
+
+<xen:if is="{$forum.description} AND {xen:property threadListDescriptions}">
+	<xen:description class="baseHtml">{xen:raw $forum.description}</xen:description>
+</xen:if>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:container var="$head.robots">
+	<meta name="robots" content="noindex" /></xen:container>
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<form action="{xen:link 'social-categories/add-social-forum', $forum}" method="post"
+	class="xenForm Preview AutoValidator"
+	data-previewUrl="{xen:link 'social-categories/create-social-forum/preview', $forum}"
+	data-redirect="on"
+>
+
+
+	<fieldset>
+		<dl class="ctrlUnit fullWidth surplusLabel">
+			<dt><label for="ctrl_title_thread_create">{xen:phrase title}:</label></dt>
+			<dd><input type="text" name="title" class="textCtrl titleCtrl" id="ctrl_title_social_forum_create" maxlength="100" autofocus="true"
+				placeholder="{xen:phrase th_social_forum_title_socialgroups}..."
+				data-liveTitleTemplate="{xen:phrase th_create_social_forum_socialgroups}: <em>%s</em>" /></dd>
+		</dl>
+
+		<dl class="ctrlUnit fullWidth">
+			<dt></dt>
+			<dd>{xen:raw $editorTemplate}</dd>
+		</dl>
+	</fieldset>
+	
+	<xen:include template="th_social_forum_fields_socialgroups" />
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd>
+			<input type="submit" value="{xen:phrase th_create_social_forum_socialgroups}" accesskey="s" class="button primary" />
+			<input type="button" value="{xen:phrase preview}..." class="button PreviewButton JsOnly" />
+		</dd>
+	</dl>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+    <template title="th_social_forum_delete_socialgroups" version_id="1340546430" version_string="1.0.0"><![CDATA[<xen:title>{xen:phrase th_delete_social_forum_socialgroups}</xen:title>
+
+<form action="{xen:link social-forums/delete, $socialForum}" method="post" class="xenForm formOverlay">
+
+	<p>{xen:phrase th_sure_you_want_to_delete_socialgroups, 'socialForum={$socialForum.title}'}</p>
+	
+	<dl class="ctrlUnit submitUnit">
+			<dt></dt>
+			<dd>
+				<input type="submit" value="{xen:phrase th_delete_social_forum_socialgroups}" class="button primary" />
+			</dd>
+		</dl>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+</form>]]></template>
+    <template title="th_social_forum_edit_socialgroups" version_id="1369257081" version_string="1.0.2"><![CDATA[<xen:title>{xen:phrase th_edit_social_forum_socialgroups}: {$socialGroup.title}</xen:title>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:container var="$head.robots">
+	<meta name="robots" content="noindex" /></xen:container>
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<form action="{xen:link 'social-forums/save', $socialForum}" method="post"
+	class="xenForm Preview AutoValidator"
+	data-previewUrl="{xen:link 'social-categories/create-social-forum/preview', $forum}"
+	data-redirect="on" enctype="multipart/form-data">
+	
+	<fieldset>
+		<dl class="ctrlUnit fullWidth surplusLabel">
+			<dt><label for="ctrl_title_thread_create">{xen:phrase title}:</label></dt>
+			<dd><input type="text" name="title" class="textCtrl titleCtrl" id="ctrl_title_social_forum_create" maxlength="100" autofocus="true"
+				placeholder="{xen:phrase th_social_forum_title_socialgroups}..." value="{$socialForum.title}"
+				data-liveTitleTemplate="{xen:phrase th_edit_social_forum_socialgroups}: <em>%s</em>" /></dd>
+		</dl>
+
+		<dl class="ctrlUnit fullWidth">
+			<dt></dt>
+			<dd>{xen:raw $editorTemplate}</dd>
+		</dl>
+	</fieldset>
+
+	<xen:include template="th_social_forum_fields_socialgroups" />
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd>
+			<input type="submit" value="{xen:phrase th_edit_social_forum_socialgroups}" accesskey="s" class="button primary" />
+			<input type="button" value="{xen:phrase preview}..." class="button PreviewButton JsOnly" />
+		</dd>
+	</dl>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+    <template title="th_social_forum_fields_socialgroups" version_id="1393262126" version_string="1.0.16"><![CDATA[<xen:hook name="th_social_forum_fields_extra_socialgroups">
+<xen:if is="{$xenOptions.th_SocialGroups_urlPortions.allow} && (!{$socialForum.url_portion} || {$xenOptions.th_SocialGroups_urlPortions.editable})">
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_new_url_portion">{xen:phrase th_url_portion_socialgroups}:</label></dt>
+		<dd>
+			<input type="text" name="new_url_portion" value="{$socialForum.url_portion}" class="textCtrl" id="ctrl_new_url_portion" maxlength="50" />
+			<p class="explain">{xen:phrase th_url_portion_explain_socialgroups}</p>
+		</dd>
+	</dl>
+</xen:if>
+<dl class="ctrlUnit">
+	<dt><label>{xen:phrase th_set_social_forum_status_socialgroups}:</label></dt>
+	<dd>
+		<ul>
+			<xen:if is="{$xenOptions.th_SocialGroups_allowClosed}">
+				<li>
+					<label for="ctrl_social_forum_open"><input type="checkbox" name="social_forum_open" value="1" id="ctrl_social_forum_open" {xen:checked {$socialForum.social_forum_open}} /> {xen:phrase th_open_social_forum_socialgroups}</label>
+					<p class="hint">{xen:phrase th_people_may_request_to_join_socialgroups}</p>
+				</li>
+			</xen:if>
+			<li>
+				<label for="ctrl_social_forum_moderated"><input type="checkbox" name="social_forum_moderated" value="1" id="ctrl_social_forum_moderated" {xen:checked {$socialForum.social_forum_moderated}} /> {xen:phrase th_moderate_social_forum_socialgroups}</label>
+				<p class="hint">{xen:phrase th_join_requests_approved_by_moderator_socialgroups}</p>
+			</li>
+			<xen:if is="{$canStickUnstickSocialForum}">
+				<li>
+					<label for="ctrl_sticky"><input type="checkbox" name="sticky" value="1" id="ctrl_sticky" {xen:checked {$socialForum.sticky}} /> {xen:phrase sticky}</label>
+					<input type="hidden" name="_set[sticky]" value="1" />
+					<p class="hint">{xen:phrase th_sticky_social_forums_appear_at_top_of_first_page_socialgroups}</p>
+				</li>
+			</xen:if>
+		</ul>
+	</dd>
+</dl>
+
+<xen:if is="{$xenOptions.th_SocialGroups_allowStyleOverride}">
+	<dl class="ctrlUnit {xen:if {$hideLabel}, 'surplusLabel'}">
+		<dt><label for="ctrl_style_override">{xen:phrase style}:</label></dt>
+		<dd>
+			<ul>
+				<li>
+					<label for="ctrl_style_override"><input type="checkbox" name="style_override" value="1" class="Disabler" id="ctrl_style_override" {xen:checked '{$socialForum.style_id}'}> {xen:phrase override_user_style_choice}</label>
+					<p class="hint">{xen:phrase if_specified_all_visitors_view_using_selected_style}</p>
+					<ul id="ctrl_style_override_Disabler">
+						<li>
+						<select name="style_id" class="textCtrl" id="ctrl_style_id">
+							<xen:foreach loop="$styles" key="$styleId" value="$style">
+								<option value="{$styleId}" class="{$style.depthClass}" {xen:selected '{$styleId} == {$socialForum.style_id}'}>{$style.depthPrefix}{$style.title}</option>
+							</xen:foreach>
+							</select>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</dd>
+	</dl>
+</xen:if>
+</xen:hook>]]></template>
+    <template title="th_social_forum_list_item_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[<xen:require css="node_list.css" />
+<xen:require css="node_forum.css" />
+<xen:require css="th_node_list_socialgroups.css" />
+
+<li class="node forum level_{$level} {xen:if '{$level} == 1 AND !{$renderedChildren}', 'groupNoChildren'} node_{$forum.node_id}">
+
+	<xen:if is="{$level} == 1"><div class="categoryStrip subHeading"></div></xen:if>
+
+	<div class="nodeInfo forumNodeInfo primaryContent {xen:if $forum.hasNew, 'unread'}">
+
+		<xen:comment><span class="nodeIcon" title="{xen:if $forum.hasNew, '{xen:phrase unread_messages}', ''}"></span></xen:comment>
+		<a href="{xen:link 'social-forums', {$forum}}" class="avatar socialForumAvatar NoOverlay Avsg-{$forum.social_forum_id}m" data-avatarhtml="true"><img src="{$forum.urls.s}" width="36" height="36" alt="{$forum.title}"></a>
+
+		<div class="nodeText">
+			<h3 class="nodeTitle"><xen:if is="{$watchCheckBoxName}"><input type="checkbox" name="{$watchCheckBoxName}" value="{$forum.social_forum_id}" />&nbsp;</xen:if><a href="{xen:link social-forums, $forum}" data-description="#nodeDescription-{$forum.social_forum_id}">{$forum.title}</a></h3>
+
+			<xen:if is="{$forum.description}">
+				<blockquote class="nodeDescription nodeDescriptionTooltip baseHtml" id="nodeDescription-{$forum.social_forum_id}">{xen:raw $forum.description}</blockquote>
+			</xen:if>
+
+			<div class="nodeStats pairsInline">
+				<dl>
+					<dt>{xen:phrase discussions}:</dt> <dd>{xen:if $forum.privateInfo, '&ndash;', {xen:number $forum.discussion_count}}</dd>
+					<dt>{xen:phrase messages}:</dt> <dd>{xen:if $forum.privateInfo, '&ndash;', {xen:number $forum.message_count}}</dd>
+				</dl>
+				<xen:if is="{$renderedChildren} AND {$level} == 2">
+					<div class="Popup subForumsPopup">
+						<a href="{xen:link social-categories, $forum}" rel="Menu" class="cloaked" data-closemenu="true"><span class="dt">{xen:phrase sub_forums}:</span> {xen:number $forum.childCount}</a>
+						
+						<div class="Menu JsOnly subForumsMenu">
+							<div class="primaryContent menuHeader">
+								<h3>{$forum.title}</h3>
+								<div class="muted">{xen:phrase sub_forums}</div>
+							</div>
+							<ol class="secondaryContent blockLinksList">
+							<xen:foreach loop="$renderedChildren" value="$child">
+								{xen:raw $child}
+							</xen:foreach>
+							</ol>
+						</div>
+					</div>
+				</xen:if>
+			</div>
+			
+			{xen:raw $nodeExtraHtml}
+		</div>
+		
+		<xen:hook name="node_forum_level_2_before_lastpost" />
+
+		<div class="nodeLastPost secondaryContent">
+			<xen:if is="{$forum.privateInfo}">
+				<span class="noMessages muted">({xen:phrase private})</span>
+			<xen:elseif is="{$forum.lastPost.date}" />
+				{xen:phrase latest}: <a href="{xen:link posts, $forum.lastPost}" title="{$forum.lastPost.title}">{xen:helper wordTrim, $forum.lastPost.title, 30}</a>
+				<span class="lastThreadMeta"><xen:if is="{xen:helper isIgnored, $forum.last_post_user_id}">{xen:phrase ignored_member}<xen:else /><xen:username user="$forum.lastPost" /></xen:if>, <xen:datetime time="$forum.lastPost.date" class="muted" /></span>
+			<xen:else />
+				<span class="noMessages muted">({xen:phrase contains_no_messages})</span>
+			</xen:if>
+		</div>
+
+		<div class="nodeControls">
+			<a href="{xen:link social-categories/index.rss, $forum}" class="tinyIcon feedIcon" title="{xen:phrase rss}">{xen:phrase rss}</a>
+		</div>
+		
+	</div>
+</li>]]></template>
+    <template title="th_social_forum_list_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[<xen:title>{xen:phrase th_your_social_forums_socialgroups}{xen:helper pagenumber, $page}</xen:title>
+<xen:h1>{xen:phrase th_your_social_forums_socialgroups}</xen:h1>
+
+<div class="pageNavLinkGroup">
+	<xen:pagenav link="social-forums" page="{$page}" perpage="{$socialForumsPerPage}" total="{$totalSocialForums}" />
+</div>
+
+<div class="socialForumTabs">
+	<ul class="tabs">
+		<li class="socialForumTabAll {xen:if "{$selectedTab} == 'all'", active}">
+			<a href="{xen:link social-forums}">{xen:phrase th_all_socialgroups}</a>
+		</li>
+		<li class="socialForumTabCreator {xen:if "{$selectedTab} == 'creator'", active}">
+			<a href="{xen:link social-forums, '', 'filter=creator'}">{xen:phrase th_creator_socialgroups}</a>
+		</li>
+		<li class="socialForumTabModerator {xen:if "{$selectedTab} == 'moderator'", active}">
+			<a href="{xen:link social-forums, '', 'filter=moderator'}">{xen:phrase th_moderator_socialgroups}</a>
+		</li>
+		<li class="socialForumTabMember {xen:if "{$selectedTab} == 'member'", active}">
+			<a href="{xen:link social-forums, '', 'filter=member'}">{xen:phrase th_member_socialgroups}</a>
+		</li>
+		<li class="socialForumTabAwaiting {xen:if "{$selectedTab} == 'awaiting'", active}">
+			<a href="{xen:link social-forums, '', 'filter=awaiting'}">{xen:phrase th_awaiting_socialgroups}</a>
+		</li>
+		<li class="socialForumTabInvited {xen:if "{$selectedTab} == 'invited'", active}">
+			<a href="{xen:link social-forums, '', 'filter=invited'}">{xen:phrase th_invited_socialgroups}</a>
+		</li>
+	</ul>
+</div>
+
+<xen:include template="th_forum_list_socialgroups" />]]></template>
+    <template title="th_social_forum_move_socialgroups" version_id="1353363710" version_string="1.0.1"><![CDATA[<xen:title>{xen:phrase th_move_social_forum_socialgroups}: {$socialForum.title}</xen:title>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+	<xen:breadcrumb href="{xen:link full:threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+
+<form action="{xen:link 'social-forums/move', $socialForum}" method="post" class="xenForm formOverlay">
+	
+	<dl class="ctrlUnit">
+		<dt><label for="ctrl_node_id">{xen:phrase th_destination_social_category_socialgroups}:</label></dt>
+		<dd>
+			<select name="move_to_node_id" id="ctrl_move_to_node_id" class="textCtrl selectSocialCategory">
+			<xen:foreach loop="$nodeOptions" value="$node">
+				<option value="{$node.node_id}" {xen:selected '{$node.node_id} == {$socialForum.node_id}'}
+					{xen:if "{$node.node_type_id} != 'SocialCategory'", 'disabled="disabled"'}>{xen:string repeat, '&nbsp; ', $node.depth}{$node.title}</option>
+			</xen:foreach>
+			</select>
+		</dd>
+	</dl>
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd><input type="submit" value="{xen:phrase th_move_social_forum_socialgroups}" class="button primary" /></dd>
+	</dl>
+
+	<input type="hidden" name="_xfConfirm" value="1" />
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+    <template title="th_social_forum_tools_socialgroups" version_id="1380235934" version_string="1.0.11"><![CDATA[<xen:if hascontent="true">
+	<div class="Popup">
+		<a rel="Menu">{xen:phrase th_social_forum_tools_socialgroups}</a>
+		<div class="Menu">
+			<div class="primaryContent menuHeader"><h3>{xen:phrase th_social_forum_tools_socialgroups}</h3></div>
+			<ul class="secondaryContent blockLinksList">
+				<xen:contentcheck>
+					<xen:hook name="th_social_forum_tools_socialgroups">
+					<xen:if is="{$canViewSocialForumMembers}">
+						<li><a href="{xen:link social-forums/members, $socialForum}">{xen:phrase th_view_social_forum_members_socialgroups}</a></li>
+					</xen:if>
+					<xen:if is="{$member.social_forum_member_id}">
+						<xen:if is="{$canLeaveSocialForum}">
+							<li><a href="{xen:link social-forums/join, $socialForum, '_xfToken={$visitor.csrf_token_page}'}">{xen:phrase th_leave_social_forum_socialgroups}</a></li>
+						</xen:if>
+					<xen:else />
+						<xen:if is="{$canJoinSocialForum}">
+							<li><a href="{xen:link social-forums/join, $socialForum, '_xfToken={$visitor.csrf_token_page}'}">{xen:phrase th_join_social_forum_socialgroups}</a></li>
+						</xen:if>
+					</xen:if>
+					<xen:if is="{$canEditSocialForum}">
+						<li><a href="{xen:link social-forums/edit, $socialForum}">{xen:phrase th_edit_social_forum_socialgroups}</a></li>
+						<li><a href="{xen:link social-forums/avatar, $socialForum}" class="OverlayTrigger">{xen:phrase edit_avatar}</a></li>
+					</xen:if>
+					<xen:if is="{$canMoveSocialForum}">
+						<li><a href="{xen:link social-forums/move, $socialForum}" class="OverlayTrigger">{xen:phrase th_move_social_forum_socialgroups}</a></li>
+					</xen:if>
+					<xen:if is="{$canDeleteSocialForum}">
+						<li><a href="{xen:link social-forums/delete, $socialForum}" class="OverlayTrigger">{xen:phrase th_delete_social_forum_socialgroups}</a></li>
+					</xen:if>
+					</xen:hook>
+				</xen:contentcheck>
+			</ul>
+		</div>
+	</div>
+</xen:if>]]></template>
+    <template title="th_social_forum_watch_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[<xen:if is="{$forumWatch}">
+	<xen:title>{xen:phrase unwatch_forum} - {$socialForum.title}</xen:title>
+<xen:else />
+	<xen:title>{xen:phrase watch_forum} - {$socialForum.title}</xen:title>
+</xen:if>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+</xen:navigation>
+
+<xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<form action="{xen:link 'social-forums/watch', $socialForum}" method="post" class="xenForm formOverlay AutoValidator">
+
+	<xen:if is="{$forumWatch}">
+		<dl class="ctrlUnit submitUnit">
+			<dt></dt>
+			<dd>
+				<input type="hidden" name="stop" value="stop" />
+				<input type="submit" value="{xen:phrase unwatch_forum}" class="button primary" />
+			</dd>
+		</dl>
+	<xen:else />
+		<xen:if is="{$forum.allowed_watch_notifications} != 'none'">
+			<dl class="ctrlUnit">
+				<dt>{xen:phrase send_notifications_for}:</dt>
+				<dd>
+					<ul>
+						<li>
+							<label>
+								<input type="radio" name="notify_on" value="thread" checked="checked" />
+								{xen:phrase new_threads}
+							</label>
+						</li>
+						<xen:if is="{$forum.allowed_watch_notifications} == 'all'">
+							<li>
+								<label>
+									<input type="radio" name="notify_on" value="message" />
+									{xen:phrase new_messages}
+								</label>
+							</li>
+						</xen:if>
+						<li>
+							<label>
+								<input type="radio" name="notify_on" value="" />
+								{xen:phrase dont_send_notifications}
+								<p class="hint">{xen:phrase no_notifications_forum_watch_description}</p>
+							</label>
+						</li>
+					</ul>
+				</dd>
+			</dl>
+
+			<dl class="ctrlUnit">
+				<dt>{xen:phrase send_notifications_via}:</dt>
+				<dd>
+					<ul>
+						<li>
+							<label>
+								<input type="checkbox" name="send_alert" value="1" checked="checked" />
+								{xen:phrase alerts}
+							</label>
+						</li>
+						<li>
+							<label>
+								<input type="checkbox" name="send_email" value="1" />
+								{xen:phrase emails}
+							</label>
+						</li>
+					</ul>
+				</dd>
+			</dl>
+		</xen:if>
+
+		<dl class="ctrlUnit submitUnit">
+			<dt></dt>
+			<dd>
+				<input type="submit" value="{xen:phrase watch_forum}" class="button primary" />
+			</dd>
+		</dl>
+	</xen:if>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+	<input type="hidden" name="_xfConfirm" value="1" />
+</form>]]></template>
+    <template title="th_watch_social_forums_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[<xen:title>{xen:phrase th_watched_social_forums_socialgroups}</xen:title>
+
+<form action="{xen:link 'watched/social-forums/update'}" method="post" class="sectionMain">
+
+	<h3 class="subHeading">&nbsp;</h3>	
+	<xen:if is="{$socialForums}">	
+		<ol class="nodeList">
+		<xen:foreach loop="$socialForums" value="$socialForum">
+			<xen:set var="$socialForumWatch" value="{$socialForumsWatched.{$socialForum.social_forum_id}}" />
+			<xen:include template="th_social_forum_list_item_socialgroups">
+				<xen:set var="$level" value="2" />
+				<xen:set var="$forum" value="{$socialForum}" />
+				<xen:set var="$watchCheckBoxName" value="social_forum_ids[]" />
+				<xen:set var="$nodeExtraHtml">
+					<xen:if is="{$forumWatch.notify_on}">
+						<div class="nodeExtraNote"><xen:if is="{$socialForumWatch.notify_on} == 'thread'">{xen:phrase new_threads}<xen:else />{xen:phrase new_messages}</xen:if><xen:if is="{$socialForumWatch.send_alert}">, {xen:phrase alerts}</xen:if><xen:if is="{$socialForumWatch.send_email}">, {xen:phrase emails}</xen:if></div>
+					</xen:if>
+				</xen:set>
+			</xen:include>
+		</xen:foreach>
+		</ol>
+	<xen:else />
+		<div class="primaryContent">
+			{xen:phrase th_you_not_watching_any_social_forums_socialgroups}
+		</div>
+	</xen:if>
+	
+	<div class="sectionFooter">
+		<select name="do" class="textCtrl">
+			<option>{xen:phrase with_selected}...</option>
+			<option value="email">{xen:phrase enable_email_notification}</option>
+			<option value="no_email">{xen:phrase disable_email_notification}</option>
+			<option value="alert">{xen:phrase enable_alerts}</option>
+			<option value="no_alert">{xen:phrase disable_alerts}</option>
+			<option value="stop">{xen:phrase stop_watching_forums}</option>
+		</select>
+		<input type="submit" value="{xen:phrase go}" class="button" class="button" />
+	</div>
+
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_socialGroups" description="Copyright notice for [⌂] Social Groups" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+    <modification template="thread_list_item" modification_key="th_threadListItem_socialGroups" description="Shows name of social forum in mixed-forum thread lists (i.e. New Posts)." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<a href="{xen:link forums, \$thread\.forum}" class="forumLink">{\$thread\.forum\.title}</a>#]]></find>
+      <replace><![CDATA[<xen:if is="{$thread.socialForum}">
+<a href="{xen:link social-forums, $thread.socialForum}" class="forumLink">{$thread.socialForum.title}</a>
+<xen:else />
+${0}
+</xen:if>]]></replace>
+    </modification>
+    <modification template="navigation" modification_key="th_watchedSocialForumsLink_socialGroups" description="Adds a link for Watched Social Forums to the navigation menu." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<li><a href="{xen:link 'watched/forums'}">{xen:phrase watched_forums}</a></li>#]]></find>
+      <replace><![CDATA[${0}
+<xen:if is="{$xenOptions.th_SocialGroups_showWatchedGroups}">
+<li><a href="{xen:link 'watched/social-forums'}">{xen:phrase th_watched_social_forums_socialgroups}</a></li>
+</xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
