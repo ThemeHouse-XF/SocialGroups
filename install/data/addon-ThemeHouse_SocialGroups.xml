@@ -29,9 +29,9 @@
 	<xen:selectunit name="config[node_id]" label="{xen:phrase th_social_category_socialgroups}:">
 		<xen:options source="$nodeOptions" />
 	</xen:selectunit>
-		
+
 	<xen:submitunit save="{xen:phrase validate_configuration}" />
-		
+
 	<input type="hidden" name="config[retain_keys]" value="{$retainKeys}" />
 	<input type="hidden" name="importer" value="{$importer}" />
 </xen:form>]]></template>
@@ -46,7 +46,7 @@
 		</xen:select>
 		<xen:select name="{$fieldPrefix}[{$preparedOption.option_id}][1]" value="{$preparedOption.option_value.1}" inputclass="autoSize">
 			<xen:option value="asc">{xen:phrase ascending}</xen:option>
-			<xen:option value="desc">{xen:phrase descending}</xen:option>		
+			<xen:option value="desc">{xen:phrase descending}</xen:option>
 		</xen:select>
 		<xen:include template="option_list_option_editlink" />
 		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
@@ -228,50 +228,50 @@ table.socialGroupsPermissions .source th {
 		<xen:hook name="admin_forum_edit_panes">
 		<li>
 			<xen:hook name="forum_edit_basic_information">
-			
+
 			<xen:textboxunit name="title" value="{$forum.title}" label="{xen:phrase title}:" data-liveTitleTemplate="{xen:if {$forum.node_id},
 				'{xen:phrase th_edit_social_category_socialgroups}: <em>%s</em>',
 				'{xen:phrase th_create_new_social_category_socialgroups}: <em>%s</em>'}">
 			</xen:textboxunit>
-			
+
 			<!-- slot: after_title -->
-			
+
 			<xen:textboxunit name="node_name" value="{$forum.node_name}" label="{xen:phrase url_portion}:" hint="{xen:phrase optional}">
 				<xen:explain>{xen:phrase th_if_entered_url_to_social_category_not_contain_id_socialgroups}</xen:explain>
 			</xen:textboxunit>
-			
+
 			<!-- slot: after_node_name -->
-	
+
 			<xen:textboxunit name="description" value="{$forum.description}" label="{xen:phrase description}:" hint="{xen:phrase you_may_use_html}" explain="{xen:phrase node_description_explain}" rows="2" inputclass="Elastic" />
-			
+
 			<!-- slot: after_description -->
-			
+
 			<fieldset>
 				<!-- slot: before_parent_node_id -->
-			
+
 				<xen:selectunit name="parent_node_id" value="{$forum.parent_node_id}" label="{xen:phrase parent_node}:">
 					<xen:options source="$nodeParentOptions" />
 				</xen:selectunit>
-				
+
 				<!-- slot: after_parent_node_id -->
-				
+
 				<xen:textboxunit name="display_order" value="{$forum.display_order}" label="{xen:phrase display_order}:">
 					<xen:explain>{xen:phrase position_of_this_item_relative_to_other_nodes_with_same_parent}</xen:explain>
 				</xen:textboxunit>
-				
+
 				<!-- slot: after_display_order -->
-				
+
 				<xen:checkboxunit label="">
 					<xen:option name="display_in_list" label="{xen:phrase display_in_node_list}" selected="{$forum.display_in_list}">
 						<xen:hint>{xen:phrase if_unselected_users_will_not_see_this_node_in_list}</xen:hint>
 					</xen:option>
 				</xen:checkboxunit>
-				
+
 				<!-- slot: after_display_in_list -->
 			</fieldset>
-			
+
 			<!-- slot: before_style_override -->
-			
+
 			<xen:checkboxunit label="{xen:phrase style}:">
 				<xen:option name="style_override" label="{xen:phrase override_user_style_choice}" selected="{$forum.style_id}">
 					<xen:select name="style_id" value="{$forum.style_id}">
@@ -280,19 +280,19 @@ table.socialGroupsPermissions .source th {
 					<xen:hint>{xen:phrase if_specified_all_visitors_view_using_selected_style}</xen:hint>
 				</xen:option>
 			</xen:checkboxunit>
-			
+
 			</xen:hook>
 		</li>
 		<!-- slot: after_basic_information -->
 		<li>
 			<xen:hook name="admin_forum_edit_forum_options">
-			
+
 			<xen:checkboxunit label="">
 				<xen:option name="allow_posting" label="{xen:phrase th_allow_new_messages_to_be_posted_in_socialgroups}" selected="{$forum.allow_posting}">
 					<xen:hint>{xen:phrase th_if_disabled_users_not_able_post_messages_in_socialgroups}</xen:hint>
 				</xen:option>
 			</xen:checkboxunit>
-				
+
 			<xen:if is="{$xenOptions.currentVersionId} >= 1040000">
 				<xen:checkboxunit label="">
 					<xen:option name="allow_poll" label="{xen:phrase th_allow_polls_to_be_created_in_socialgroups}" selected="{$forum.allow_poll}">
@@ -302,7 +302,7 @@ table.socialGroupsPermissions .source th {
 					<xen:option name="moderate_threads" label="{xen:phrase th_moderate_new_threads_posted_in_socialgroups}" selected="{$forum.moderate_threads}">
 						<xen:hint>{xen:phrase th_if_enabled_moderator_manually_approve_threads_posted_in_socialgroups}</xen:hint>
 					</xen:option>
-	
+
 					<xen:option name="moderate_replies" label="{xen:phrase th_moderate_replies_posted_in_socialgroups}" selected="{$forum.moderate_replies}">
 						<xen:hint>{xen:phrase th_if_enabled_moderator_manually_approve_replies_posted_in_socialgroups}</xen:hint>
 					</xen:option>
@@ -314,17 +314,17 @@ table.socialGroupsPermissions .source th {
 					</xen:option>
 				</xen:checkboxunit>
 			</xen:if>
-				
+
 			<xen:checkboxunit label="">
 				<xen:option name="count_messages" label="{xen:phrase th_count_messages_in_social_groups_toward_user_total_socialgroups}" selected="{$forum.count_messages}">
 					<xen:hint>{xen:phrase th_if_disabled_messages_posted_will_not_contribute_to_socialgroups}</xen:hint>
 				</xen:option>
-				
+
 				<xen:option name="find_new" label="{xen:phrase th_include_social_groups_in_find_new_threads_socialgroups}" selected="{$forum.find_new}">
 					<xen:hint>{xen:phrase th_if_disabled_messages_will_never_appear_in_find_new_socialgroups}</xen:hint>
 				</xen:option>
 			</xen:checkboxunit>
-			
+
 			<xen:if is="{$xenOptions.currentVersionId} >= 1020000">
 				<xen:radiounit label="{xen:phrase forum_watch_notification_limit}:" name="allowed_watch_notifications" value="{$forum.allowed_watch_notifications}">
 					<xen:option value="all">{xen:phrase new_messages}</xen:option>
@@ -332,7 +332,7 @@ table.socialGroupsPermissions .source th {
 					<xen:option value="none">{xen:phrase none}</xen:option>
 					<xen:explain>{xen:phrase forum_watch_notification_limit_desc}</xen:explain>
 				</xen:radiounit>
-	
+
 				<xen:controlunit label="{xen:phrase default_sort_order}:">
 					<xen:select name="default_sort_order" value="{$forum.default_sort_order}" inputclass="autoSize">
 						<xen:option value="last_post_date">{xen:phrase last_message}</xen:option>
@@ -347,7 +347,7 @@ table.socialGroupsPermissions .source th {
 					</xen:select>
 				</xen:controlunit>
 			</xen:if>
-			
+
 			<xen:if is="{$xenOptions.currentVersionId} >= 1040000">
 				<xen:selectunit label="{xen:phrase thread_list_date_limit}:" name="list_date_limit_days" value="{$forum.list_date_limit_days}">
 					<xen:option value="0">{xen:phrase none}</xen:option>
@@ -361,16 +361,16 @@ table.socialGroupsPermissions .source th {
 					<xen:explain>{xen:phrase thead_list_date_limit_used_on_busy_forums_to_improve_performance}</xen:explain>
 				</xen:selectunit>
 			</xen:if>
-			
+
 			</xen:hook>
 		</li>
 		<!-- slot: after_forum_options -->
 		<li>
 			<xen:hook name="admin_forum_edit_thread_prefixes">
-			
+
 			<xen:if is="{$prefixOptions}">
 				<xen:require js="js/xenforo/acp_forum_editor.js" />
-				
+
 				<xen:controlunit label="{xen:phrase available_prefixes}:" class="multiple checkboxColumns AvailablePrefixes">
 					<xen:hint><br /><label><input type="checkbox" class="CheckAll" data-target="dl.AvailablePrefixes" /> {xen:phrase select_all}</label></xen:hint>
 					<xen:html>
@@ -383,9 +383,9 @@ table.socialGroupsPermissions .source th {
 						</xen:foreach>
 					</xen:html>
 				</xen:controlunit>
-				
+
 				<!-- slot: after_available_prefixes -->
-			
+
 				<fieldset>
 					<xen:selectunit name="default_prefix_id" value="{$forum.default_prefix_id}"
 						label="{xen:phrase default_thread_prefix}"
@@ -395,16 +395,16 @@ table.socialGroupsPermissions .source th {
 						<xen:explain>{xen:phrase default_thread_prefix_explain}</xen:explain>
 					</xen:selectunit>
 				</fieldset>
-				
+
 				<!-- slot: after_default_prefix_id -->
-				
+
 			<xen:else />
 				<xen:controlunit label="{xen:phrase available_prefixes}">({xen:phrase none}) <a href="{xen:adminlink thread-prefixes/add}" target="_blank">{xen:phrase create_new_thread_prefix}</a></xen:controlunit>
 				<input type="hidden" name="default_thread_prefix" value="0" />
-				
+
 				<!-- slot: after_available_prefixes_none -->
 			</xen:if>
-			
+
 			</xen:hook>
 		</li>
 		</xen:hook>
@@ -420,7 +420,7 @@ table.socialGroupsPermissions .source th {
     <template title="th_tools_rebuild_socialgroups"><![CDATA[<xen:form action="{xen:adminlink 'tools/cache-rebuild'}">
 	<h2 class="subHeading">{xen:phrase th_rebuild_social_forum_information_socialgroups}</h2>
 	<xen:spinboxunit name="options[batch]" value="250" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
-	
+
 	<xen:submitunit save="{xen:phrase rebuild_now}" />
 	<input type="hidden" name="cache" value="SocialGroups" />
 </xen:form>]]></template>
@@ -477,7 +477,7 @@ table.socialGroupsPermissions .source th {
   <email_templates>
     <template title="th_new_thread_messagetext_socialgroups">
       <subject><![CDATA[{xen:phrase th_new_thread_x_in_social_forum_y_socialgroups, "title={$thread.titleCensored}", "social_forum_title={$socialForum.title}"}]]></subject>
-      <body_text><![CDATA[{xen:phrase watched_thread_reply_messagetext_email_text, 
+      <body_text><![CDATA[{xen:phrase watched_thread_reply_messagetext_email_text,
 	"receiver_username={$receiver.username}",
 	"username={$reply.username}",
 	"title={xen:helper threadPrefix, $thread, plain}{$thread.title}",
@@ -530,7 +530,7 @@ table.socialGroupsPermissions .source th {
 	</td>
 	<td width="90%" style="font-family: Georgia, 'Times New Roman', Times, serif; font-size: 11pt; line-height: 1.4">
 		{xen:raw $post.messageHtml}
-	</td>	
+	</td>
 </tr>
 </table>
 
@@ -652,7 +652,7 @@ table.socialGroupsPermissions .source th {
       <relation group_id="th_SocialGroups" display_order="550"/>
     </option>
     <option option_id="th_SocialGroups_createToSecondary" edit_format="callback" data_type="array" can_backup="1">
-      <default_value/>
+      <default_value>a:0:{}</default_value>
       <edit_format_params>ThemeHouse_SocialGroups_Option_OnOffNodeSelect::renderOption</edit_format_params>
       <sub_options>*</sub_options>
       <relation group_id="th_SocialGroups" display_order="1280"/>
@@ -676,7 +676,7 @@ table.socialGroupsPermissions .source th {
       <relation group_id="th_SocialGroups" display_order="1410"/>
     </option>
     <option option_id="th_SocialGroups_notifyOptions" edit_format="template" data_type="array" can_backup="1">
-      <default_value>*</default_value>
+      <default_value>a:0:{}</default_value>
       <edit_format_params>option_template_thSocialGroupsMemberDefaults</edit_format_params>
       <sub_options>*</sub_options>
       <relation group_id="ForumWatch" display_order="2000"/>
@@ -694,7 +694,7 @@ table.socialGroupsPermissions .source th {
       <relation group_id="th_SocialGroups" display_order="1120"/>
     </option>
     <option option_id="th_SocialGroups_primarySignature" edit_format="onoff" data_type="boolean" can_backup="1">
-      <default_value/>
+      <default_value>0</default_value>
       <edit_format_params/>
       <sub_options/>
       <relation group_id="th_SocialGroups" display_order="1130"/>
@@ -706,7 +706,7 @@ table.socialGroupsPermissions .source th {
       <relation group_id="th_SocialGroups" display_order="1220"/>
     </option>
     <option option_id="th_SocialGroups_secondarySignature" edit_format="onoff" data_type="boolean" can_backup="1">
-      <default_value/>
+      <default_value>0</default_value>
       <edit_format_params/>
       <sub_options/>
       <relation group_id="th_SocialGroups" display_order="1230"/>
@@ -736,7 +736,7 @@ table.socialGroupsPermissions .source th {
       <relation group_id="th_SocialGroups" display_order="500"/>
     </option>
     <option option_id="th_SocialGroups_urlPortions" edit_format="template" data_type="array" can_backup="1">
-      <default_value/>
+      <default_value>a:0:{}</default_value>
       <edit_format_params>th_option_url_portion_socialgroups</edit_format_params>
       <sub_options>*</sub_options>
       <relation group_id="th_SocialGroups" display_order="1520"/>
@@ -1113,12 +1113,12 @@ This message was sent to you because you joined the social forum "{social_forum_
 			</xen:if>
 		</xen:contentcheck>
 		</ol>
-	
+
 		<xen:if is="{$forum}">
 			<h3 id="SocialForumListOptionsHandle" class="JsOnly"><a href="#">{xen:phrase th_social_forum_display_options_socialgroups}</a></h3>
-			
+
 			<form action="{xen:if {$forum}, {xen:link 'social-categories', $forum}, {xen:link 'social-forums'}}" method="post" class="SocialForumListOptions secondaryContent">
-			
+
 				<div class="controlGroup">
 					<label for="ctrl_order">{xen:phrase th_sort_social_forums_by_socialgroups}:</label>
 					<select name="order" id="ctrl_order" class="textCtrl">
@@ -1128,7 +1128,7 @@ This message was sent to you because you joined the social forum "{social_forum_
 						<option value="member_count" {xen:selected "{$order} == 'member_count'"}>{xen:phrase th_number_of_members_socialgroups}</option>
 					</select>
 				</div>
-			
+
 				<div class="controlGroup">
 					<label for="ctrl_direction">{xen:phrase th_order_social_forums_in_socialgroups}:</label>
 					<select name="direction" id="ctrl_direction" class="textCtrl">
@@ -1136,13 +1136,13 @@ This message was sent to you because you joined the social forum "{social_forum_
 						<option value="asc" {xen:selected "{$orderDirection} == 'asc'"}>{xen:phrase ascending_order}</option>
 					</select>
 				</div>
-			
+
 				<div class="buttonGroup">
 					<input type="submit" class="button primary" value="{xen:phrase set_options}" />
 					<input type="reset" class="button" value="{xen:phrase cancel}" />
 				</div>
-			
-				<xen:if is="!{$forum}">		
+
+				<xen:if is="!{$forum}">
 					<input type="hidden" name="filter" value="{$selectedTab}" />
 				</xen:if>
 				<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
@@ -1195,40 +1195,40 @@ This message was sent to you because you joined the social forum "{social_forum_
 	{
 		float: left;
 		margin-right: 10px;
-		
+
 		overflow: hidden; zoom: 1;
 	}
-	
+
 		.SocialForumListOptions dt
 		{
 			float: left;
 		}
-		
+
 		.SocialForumListOptions dd
 		{
 			margin-left: 120px;
 		}
-		
+
 	.SocialForumListOptions .buttonGroup
 	{
 		float: right;
 	}
-	
+
 		.DiscussionListOptions .buttonGroup input
 		{
 			min-width: 75px;
 		}
-	
+
 #SocialForumListOptionsHandle
 {
 	{xen:property discussionListOptionsHandle}
 }
-	
+
 	#SocialForumListOptionsHandle a
 	{
 		{xen:property discussionListOptionsHandleLink}
 	}
-	
+
 .afterSocialForumListHandle
 {
 	margin-top: 20px;
@@ -1256,7 +1256,7 @@ This message was sent to you because you joined the social forum "{social_forum_
 </div>]]></template>
     <template title="th_member_list_item_edit_socialgroups" version_id="1380235934" version_string="1.0.11"><![CDATA[<li>
 	<div class="memberListItemEdit inlineCtrlGroup">
-	
+
 		<ul class="optionsEdit editBlock">
 			<xen:if is="{$canApproveSocialForumJoinRequest} || {$canRejectSocialForumJoinRequest} || {$canRevokeSocialForumMembership}">
 				<li><label for="ctrl_is_social_forum_member_{$user.user_id}" title="{xen:phrase th_member_socialgroups}"><input type="checkbox" name="is_social_forum_member" value="1" id="ctrl_is_social_forum_member_{$user.user_id}"
@@ -1274,14 +1274,14 @@ This message was sent to you because you joined the social forum "{social_forum_
 					{xen:checked "{$user.is_social_forum_creator}"} /> {xen:phrase th_creator_socialgroups}</label></li>
 			</xen:if>
 		</ul>
-	
+
 		<div class="buttons editBlock">
 			<img src="{xen:property imagePath}/xenforo/widgets/ajaxload.info_000000_facebook.gif" class="AjaxSaveProgress" alt="" />
 			<input type="submit" value="{xen:phrase save}" class="textCtrl primary" id="ctrl_submit_{$user.user_id}" data-submitUrl="{xen:link 'social-forums/member-save', $socialForum, 'user_id={$user.user_id}'}" />
 			<input type="reset"  value="{xen:phrase cancel}" class="textCtrl" id="ctrl_reset_{$user.user_id}" />
 		</div>
-		
-	</div>	
+
+	</div>
 </li>]]></template>
     <template title="th_member_list_item_edit_socialgroups.css" version_id="1364590476" version_string="1.0.2"><![CDATA[.memberListItem .controls {
 	float: right;
@@ -1302,40 +1302,40 @@ This message was sent to you because you joined the social forum "{social_forum_
 		padding: 0 10px;
 		line-height: 45px;
 	}
-		
+
 		.memberListItemEdit .titleEdit > .titleField
 		{
 			width: 270px;
 		}
-		
+
 			.memberListItemEdit .titleEdit .textCtrlWrap
 			{
 				line-height: 14px;
 				height: 14px;
 			}
-		
+
 		.memberListItemEdit .optionsEdit li
 		{
 			float: left;
 			margin-right: 10px;
 		}
-		
+
 	.memberListItemEdit .buttons
 	{
-		float: right;		
+		float: right;
 	}
-	
+
 		.memberListItemEdit .buttons .AjaxSaveProgress
 		{
 			vertical-align: middle;
 			visibility: hidden;
 		}
-	
+
 			.memberListItemEdit.InProgress .buttons .AjaxSaveProgress
 			{
 				visibility: visible;
 			}
-		
+
 		.memberListItemEdit .buttons input
 		{
 			_width: 100px;
@@ -1345,16 +1345,16 @@ This message was sent to you because you joined the social forum "{social_forum_
 <xen:require css="th_member_list_item_edit_socialgroups.css" />
 
 <xen:if is="{$user.user_id}">
-		
+
 	<li class="primaryContent memberListItem{xen:if $extended, ' extended'}"{xen:if $id, ' id="{$id}"'}>
 		<xen:avatar user="$user" size="s" class="{xen:if $noOverlay, 'NoOverlay'}" />
 
 		<xen:if is="{$extraTemplate}"><div class="extra">{xen:raw $extraTemplate}</div></xen:if>
 
 		<div class="member">
-	
+
 			<h3 class="username"><xen:username user="$user" rich="true" class="StatusTooltip{xen:if $noOverlay, ' NoOverlay'}" title="{xen:string censor, $user.status}" /></h3>
-			
+
 			<div class="userInfo">
 				<div class="userBlurb dimmed">{xen:helper userBlurb, $user}</div>
 				<xen:if is="{$canEditInline}">
@@ -1372,11 +1372,11 @@ This message was sent to you because you joined the social forum "{social_forum_
 					</dl>
 				</xen:if>
 			</div>
-					
+
 			<xen:if hascontent="true">
 				<div class="contentInfo"><xen:contentcheck>{xen:raw $contentTemplate}</xen:contentcheck></div>
 			</xen:if>
-		
+
 		</div>
 	</li>
 
@@ -1392,7 +1392,7 @@ This message was sent to you because you joined the social forum "{social_forum_
 <xen:require css="member_list.css" />
 <xen:require css="xenforo_member_list_item.css" />
 <xen:require css="inline_mod.css" />
-		
+
 <xen:require js="js/themehouse/socialgroups/member_list.js" />
 
 <div class="pageNavLinkGroup">
@@ -1444,7 +1444,7 @@ This message was sent to you because you joined the social forum "{social_forum_
 		{xen:phrase th_no_social_forum_members_socialgroups}
 	</div>
 </xen:if>
-	
+
 	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 </form>
 
@@ -1554,7 +1554,7 @@ ol.socialPostBit li.extended span
 				<xen:if is="{$renderedChildren} AND {$level} == 2">
 					<div class="Popup subForumsPopup">
 						<a href="{xen:link social-categories, $forum}" rel="Menu" class="cloaked" data-closemenu="true"><span class="dt">{xen:phrase sub_forums}:</span> {xen:number $forum.childCount}</a>
-						
+
 						<div class="Menu JsOnly subForumsMenu">
 							<div class="primaryContent menuHeader">
 								<h3>{$forum.title}</h3>
@@ -1570,7 +1570,7 @@ ol.socialPostBit li.extended span
 				</xen:if>
 			</div>
 		</div>
-		
+
 		<xen:hook name="node_forum_level_2_before_lastpost" />
 
 		<div class="nodeLastPost secondaryContent">
@@ -1587,7 +1587,7 @@ ol.socialPostBit li.extended span
 		<div class="nodeControls">
 			<a href="{xen:link social-categories/index.rss, $forum}" class="tinyIcon feedIcon" title="{xen:phrase rss}">{xen:phrase rss}</a>
 		</div>
-		
+
 	</div>
 
 	<xen:if is="{$renderedChildren} AND {$level} == 1">
@@ -1626,7 +1626,7 @@ ol.socialPostBit li.extended span
 
 <xen:elseif is="{$member.social_forum_member_id}" />
 	<xen:if hascontent="true">
-		<div class="section">		
+		<div class="section">
 			<div class="secondaryContent">
 				<xen:contentcheck>
 					<xen:if is="{$member.is_invited}">
@@ -1649,20 +1649,20 @@ ol.socialPostBit li.extended span
 	line-height: 16px;
 	background-image: url('{xen:property imagePath}/xenforo/gradients/form-button-white-25px.png');
 }
-	
+
 	.socialGroupAlerts  dt
 	{
 		color: {xen:property primaryLight};
 		display: inline;
 	}
-	
+
 	.socialGroupAlerts  dd
 	{
 		color: {xen:property primaryDark};
 		font-weight: bold;
 		display: inline;
 	}
-	
+
 		.socialGroupAlerts .icon
 		{
 			float: right;
@@ -1671,9 +1671,9 @@ ol.socialPostBit li.extended span
 			margin-left: 5px;
 			background: url('{xen:property imagePath}/xenforo/xenforo-ui-sprite.png') no-repeat -1000px -1000px;
 		}
-		
+
 			.socialGroupAlerts .moderatedAlert .icon { background-position: -32px -16px; }
-	
+
 
 #JoinGroupButton
 {
@@ -1778,7 +1778,7 @@ ol.socialPostBit li.extended span
 			<a href="{xen:link 'social-categories/create-social-forum', $forum}" class="callToAction"><span>{xen:phrase create_new_social_forum}</span></a>
 		</xen:if>
 	</div>
-	
+
 	<xen:pagenav link="social-categories" linkdata="{$forum}" linkparams="{$pageNavParams}" page="{$page}" perpage="{$socialForumsPerPage}" total="{$totalSocialForums}" />
 </div>]]></template>
     <template title="th_social_category_watch_socialgroups" version_id="1374148357" version_string="1.0.5"><![CDATA[<xen:if is="{$forumWatch}">
@@ -1982,7 +1982,7 @@ ol.socialPostBit li.extended span
 	<xen:hook name="th_social_forum_sidebar_below_info_socialgroups" />
 
 	<xen:include template="th_sidebar_join_button_socialgroups" />
-	
+
 	<xen:if is="{$socialForumModerators}">
 		<div class="section avatarList">
 			<div class="secondaryContent socialModeratorsList">
@@ -2030,7 +2030,7 @@ ol.socialPostBit li.extended span
 		<div class="section infoblock">
 			<form action="{xen:link social-forums/invite, {$socialForum}}" method="post" class="secondaryContent findMember">
 				<h3>{xen:phrase th_invite_member_socialgroups}</h3>
-					
+
 				<input type="search" name="username" placeholder="{xen:phrase name}..." results="0" class="textCtrl AutoComplete" data-autoSubmit="true" />
 				<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
 			</form>
@@ -2039,7 +2039,7 @@ ol.socialPostBit li.extended span
 	</xen:hook>
 
 	<xen:include template="sidebar_share_page" />
-	
+
 </xen:sidebar>]]></template>
     <template title="th_social_forum_create_preview_socialgroups" version_id="1401813131" version_string="1.1.1"><![CDATA[<div class="section">
 	<h3 class="subHeading">{xen:phrase preview}</h3>
@@ -2080,7 +2080,7 @@ ol.socialPostBit li.extended span
 			<dd>{xen:raw $editorTemplate}</dd>
 		</dl>
 	</fieldset>
-	
+
 	<xen:include template="th_social_forum_fields_socialgroups" />
 
 	<dl class="ctrlUnit submitUnit">
@@ -2098,7 +2098,7 @@ ol.socialPostBit li.extended span
 <form action="{xen:link social-forums/delete, $socialForum}" method="post" class="xenForm formOverlay">
 
 	<p>{xen:phrase th_sure_you_want_to_delete_socialgroups, 'socialForum={$socialForum.title}'}</p>
-	
+
 	<dl class="ctrlUnit submitUnit">
 			<dt></dt>
 			<dd>
@@ -2124,7 +2124,7 @@ ol.socialPostBit li.extended span
 	class="xenForm Preview AutoValidator"
 	data-previewUrl="{xen:link 'social-categories/create-social-forum/preview', $forum}"
 	data-redirect="on" enctype="multipart/form-data">
-	
+
 	<fieldset>
 		<dl class="ctrlUnit fullWidth surplusLabel">
 			<dt><label for="ctrl_title_thread_create">{xen:phrase title}:</label></dt>
@@ -2237,7 +2237,7 @@ ol.socialPostBit li.extended span
 				<xen:if is="{$renderedChildren} AND {$level} == 2">
 					<div class="Popup subForumsPopup">
 						<a href="{xen:link social-categories, $forum}" rel="Menu" class="cloaked" data-closemenu="true"><span class="dt">{xen:phrase sub_forums}:</span> {xen:number $forum.childCount}</a>
-						
+
 						<div class="Menu JsOnly subForumsMenu">
 							<div class="primaryContent menuHeader">
 								<h3>{$forum.title}</h3>
@@ -2252,10 +2252,10 @@ ol.socialPostBit li.extended span
 					</div>
 				</xen:if>
 			</div>
-			
+
 			{xen:raw $nodeExtraHtml}
 		</div>
-		
+
 		<xen:hook name="node_forum_level_2_before_lastpost" />
 
 		<div class="nodeLastPost secondaryContent">
@@ -2272,7 +2272,7 @@ ol.socialPostBit li.extended span
 		<div class="nodeControls">
 			<a href="{xen:link social-categories/index.rss, $forum}" class="tinyIcon feedIcon" title="{xen:phrase rss}">{xen:phrase rss}</a>
 		</div>
-		
+
 	</div>
 </li>]]></template>
     <template title="th_social_forum_list_socialgroups" version_id="1393076542" version_string="1.0.15"><![CDATA[<xen:title>{xen:phrase th_your_social_forums_socialgroups}{xen:helper pagenumber, $page}</xen:title>
@@ -2316,7 +2316,7 @@ ol.socialPostBit li.extended span
 <xen:container var="$bodyClasses">{xen:helper nodeClasses, $nodeBreadCrumbs, $forum}</xen:container>
 
 <form action="{xen:link 'social-forums/move', $socialForum}" method="post" class="xenForm formOverlay">
-	
+
 	<dl class="ctrlUnit">
 		<dt><label for="ctrl_node_id">{xen:phrase th_destination_social_category_socialgroups}:</label></dt>
 		<dd>
@@ -2463,8 +2463,8 @@ ol.socialPostBit li.extended span
 
 <form action="{xen:link 'watched/social-forums/update'}" method="post" class="sectionMain">
 
-	<h3 class="subHeading">&nbsp;</h3>	
-	<xen:if is="{$socialForums}">	
+	<h3 class="subHeading">&nbsp;</h3>
+	<xen:if is="{$socialForums}">
 		<ol class="nodeList">
 		<xen:foreach loop="$socialForums" value="$socialForum">
 			<xen:set var="$socialForumWatch" value="{$socialForumsWatched.{$socialForum.social_forum_id}}" />
@@ -2485,7 +2485,7 @@ ol.socialPostBit li.extended span
 			{xen:phrase th_you_not_watching_any_social_forums_socialgroups}
 		</div>
 	</xen:if>
-	
+
 	<div class="sectionFooter">
 		<select name="do" class="textCtrl">
 			<option>{xen:phrase with_selected}...</option>
