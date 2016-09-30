@@ -29,10 +29,16 @@ class ThemeHouse_SocialGroups_Extend_XenForo_Route_Prefix_Forums extends XFCP_Th
                 $routeFilters = XenForo_Application::get('routeFiltersOut');
                 if (isset($routeFilters['social-forums'])) {
                     foreach ($routeFilters['social-forums'] as $filter) {
-                        list ($from, $to) = XenForo_Link::translateRouteFilterToRegex($filter['find_route'],
-                            $filter['replace_route']);
+                        if (array_key_exists('find_route',$filter) && array_key_exists('replace_route',$filter)) {
+                            list ($from, $to) = XenForo_Link::translateRouteFilterToRegex($filter['find_route'],
+                                $filter['replace_route']);
 
-                        $newLink = preg_replace($from, $to, $link);
+                            $newLink = preg_replace($from, $to, $link);
+                        }
+                        else {
+                            $newLink = $link;
+                        }
+                        
                         if ($newLink != $link) {
                             $link = $newLink;
                             break;
